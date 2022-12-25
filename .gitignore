@@ -1,0 +1,5 @@
+src/**/*.pro
+src/**/*.pro.*
+src/**/Makefile*
+src/**/.qmake.stash
+src/**/.obj

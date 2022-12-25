@@ -1,0 +1,884 @@
+25.12.2022 Pazar Ders2
+
+C ve Cpp arasındaki farkları inceleyeceğiz
+
+fonksiyonlara ilişkin farklılıklar
+
+bildrimlere ve türlere ilişkin farklılıklar
+
+tür dönüşümlerine ilişkin farklılıklar
+
+...
+
+
+kitap tavsiyesi
+
+
+cpp reference ile devam edecez
+
+
+----------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+
+    //implicit int
+    //C++ invalid
+    //C89 valid C99/11 invalid
+
+    //fuu();
+    //int foo();
+
+    return 0;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//imliplicit int function (gizli int - ortülü int)
+//C++ invalid
+//C89 valid C99/11 invalid
+
+//fuu(int number){};
+
+
+/*old style function definition
+ * /*old style function definition
+ * C++ invalid
+ * C 89valid - C99/11 invalid
+ */
+ */
+func(x, y, z)
+{
+
+}
+
+int main()
+{
+
+    //implicit int
+    //C++ invalid
+    //C89 valid C99/11 invalid
+
+    //fuu();
+    //int foo();
+
+    return 0;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//C++ bu iki fonksiyon benim için aynıdır parametreleri yoktur
+void func(); //C, parametreler hakkında herhangi bilgim yok
+void fuu(void); // C, parametrelerim yok
+
+int main()
+{
+
+    func(1, 2, 3, 5);
+    fuu(5, 4);
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //implicit int
+    //C89 valid C99/11 invalid
+    //C++ invalid
+    const a = 23;
+    static b = 2;
+
+    //const int a = 23;
+    //static int b = 2;
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//C(C89) bool tür yok. C de bool türü yerine int türü kullanılır
+//C99 _Bool tür eklenmiştir.
+
+
+/*
+ * C++ bool türüne sahip
+ * C++ bool anahtar sözcüğü
+ * C++ true, false constant
+ */
+
+int main()
+{
+
+    //logic karsılastırma dondurdugu degerın turu bool türünden Cpp
+    //C de ise bu int türden
+    if(15 > 25)
+        ;
+
+    cout << "\n" << "size : " << sizeof (bool) << "\n\n";
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+//C(C89) bool tür yok. C de bool türü yerine int türü kullanılır
+//C99 _Bool tür eklenmiştir.
+
+
+/*
+ * C++ bool türüne sahip
+ * C++ bool anahtar sözcüğü
+ * C++ true, false constant
+ */
+
+int main()
+{
+
+    double y = 2.5;
+    int x;
+    x = 4;
+    bool flag = y; //otomatik olarka convertion var
+                    //0 false
+                    // sıfır dısı degerler true
+    cout << "flag : " << flag << "\n";
+
+    int z = flag; // false 0  true 1
+    cout << "z : " << z << "\n";
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+
+    //nullptr --> bool false
+    int x = 4;
+    int *ptr = &x;
+    bool flagPtr = ptr;
+    cout << "flagPtr : " << ptr << "\n";
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //character constants
+    //C++ char type
+    //C int type
+
+    printf("size: %zu\n", sizeof ('A'));
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //string literals
+    //C++ const char *
+    //C char *
+    const char *pstr = "orhan";
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //C de auto keyword vardı fakat artık depracated, otomatik ömür anlamına geliyordu
+    //Automatic life
+    //C++ analmı değişti, type deduction olarak.
+    auto x = 10;
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //C de valid
+    //C++ de invalid
+    for (int i = 0; i < 10; i++) {
+        int i = 15;
+        printf("i : 15\n", i);
+    }
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //const keyword
+    //C++ da invalid
+    //C de gecerli her ikiside
+    const int y = 10; //C++ da valid
+    const int x;//C++ da invalid
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+
+    //const expression
+
+    //a- global değişkenlere ilk deger veren ifadeler
+    //b- dizi boyutu gösteren ifadeler (variable lenght array harici)
+    //c- switch deyiminde case label ifadesi
+    //d- yapılar bit alanı göstereni kaç bir oldugunu gosteren ifade
+    //e- Dizilere ilk deger veren ifadeler
+
+    int a = 5;
+    const int b = 6;
+
+    switch (a) {
+        case b: break;
+    }
+
+
+    struct Data {
+        int y : b;
+        int z : a; //invalid
+    };
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+//Linkage
+/*
+ * C de
+ *
+ * static int x = 10;  //internal link C
+ * int x = 10;  //external link C
+ * const int x = 10; //external link C
+ *
+ * C++
+ *
+ * int x = 10; //external link C++
+ * const int x = 10; //internal link C++
+ *
+ * extern const int x = 10;
+ *
+ */
+
+int main()
+{
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+/*
+ * struct Enum Union
+ */
+
+//structın ismi Data'dır C++
+//struct tag dir C de
+//C++ da isimleri dogrudan kullanaibliriz
+//C de ise dogrudan kullanamayız
+
+struct Data{
+    int x;
+    int y;
+};
+
+union Word{
+    int x;
+    char str[4];
+};
+
+enum Color{
+    White,
+    Yellow,
+};
+
+int main()
+{
+    Data myData;
+    Word word;
+    Color myColor;
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+//C++da struct tanımlamada isim olarak kabul edildiği için
+//aynı isimde typedef tanımlar isek isim cakısması hatası alırız
+struct Data{
+    int x;
+    int y;
+};
+
+typedef struct myData{
+
+}Data;
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+/*
+ * struct Enum Union
+ */
+
+
+//C de yapıların en az bir elemanı olmak zorundadır
+//C++ da bu gecerli ve yapıların elemansız olarka kullanımı
+struct Empty{
+
+
+int main()
+{
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+/*
+ * User define type enumlar da tur donusumlere ilişkin farklılıklar
+ *
+ * C derleyicisi enum türleri int türü olarak ele alır
+ * C++ derleyicisi ise enum türlerini int türü almak zorunda değil
+ *
+ */
+
+/*
+ * Asil farklılıklar ise modern C++
+ *
+ * C de enum türleri diger türlere otomatik tur donusumu var
+ * C++ da sentaks hatasıdır
+ *
+ */
+
+
+enum Color{White, Gray, Black};
+enum Pos{Off, On};
+
+int main()
+{
+    enum Color myColor = Black;
+
+    //C++ da sentask hatsı
+    //C de gecerli
+    //myColor = 3;
+    //myColor = 5.6;
+
+    //Fakat C++ da enumların diger türlere otomatik tur donusumu vardır.
+    int ival = myColor;
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    /*
+     * C++ da char dizilere atanan ilk deger string literalleri dizi boyutundan buyuk olamaz
+     * C bu durum legaldir ve sadece uyarı mesajı verir. Fakat run time aşamasında hata verir
+     * undefined behavivor
+     *
+     */
+
+    char str[4] = "orhan";
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Tur donusumlere ilişkin farklılıklar
+
+
+    /*
+     * C de aritmatik turlerle pointer turleri arasında tur donusumu vardır
+     * C++ da sentaks hatasıdır
+     *
+     */
+
+    int x = 5;
+    int *ptr = x;
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Tur donusumlere ilişkin farklılıklar
+
+
+    /*
+     * C de aritmatik turlerle pointer turleri arasında tur donusumu vardır
+     * C++ da sentaks hatasıdır
+     *
+     */
+
+    int x = 5;
+    int *ptr = x;
+
+    /*
+     * C de pointer turlerden aritmatik turlere tur donusumu vardır
+     * C++ da sentaks hatası
+     */
+
+    int *ptr2;
+    int ival = ptr2;
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Tur donusumlere ilişkin farklılıklar
+
+      //C de legal
+      //C++ de sentaks hatası
+      int *pPtr = 0xB08000;
+      int intP = 0xB08000;
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Farklı adres turleri arasındaki donusumler
+
+    //2 istisna dısındakileri birbirine donusturmeyin
+    //istisna char * nesne adresi ve void * nesne adresi
+
+
+    //C de yanlıs ama sentaks hatası değil
+    //C++ da sentaks hatası
+      int x = 10;
+      double dPtr = &x;
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Farklı adres turleri arasındaki donusumler
+
+    //2 istisna dısındakileri birbirine donusturmeyin
+    //istisna char * nesne adresi ve void * nesne adresi
+
+
+    //C de yanlıs ama sentaks hatası değil
+    //C++ da sentaks hatası
+      int x = 10;
+      double dPtr = &x;
+
+   //T ve U turler olmak uzere
+   //T* <--> U* turler arasında tur donusumu yok C++
+   //Aynı turler arasında tur donusumu var
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Const adres donusumleri
+
+    //T*            int *
+    //const T*      const int *
+
+
+    int x = 10;
+    //&x; int *   T* turudur
+
+    int a[] = {0};
+    //a --> int *   T* turudur
+
+
+    const int cx = 10;
+    //&cx  const int * turudur
+
+
+    const int primes[] = {1, 2, 3, 4};
+    //&primes[0]
+    //primes ---> const int *
+
+
+
+    //C ile C++ arasinda önemli farklılık string literal
+
+    //"orhan"   --> char[6] C de
+    //"orhan"   --> const char [6]  C++ da
+
+
+    //cagla  ---> const char * C++
+    //cagla  ---> char *  C de
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Const adres donusumleri
+
+    //const T*  ---> T* tur donusumu var C de
+    //C++ da sentaks hatasıdır
+
+    //T* --> const T* tur donusumu otomatik vardır C ve C++
+
+    int x = 10;
+    const int *cptr = &x; //C ve C++ kod legal
+    int *ptr = cptr; //C de legal , C++ da sentaks hatası
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Hatırlatmat konusu
+
+//bunların hepsi sentaks hatası demektir
+syntax error
+invalid code
+ill-formed code
+illegal code
+
+
+
+//bu kod hatali degil ama yanlıs kod
+wrong code
+int x = 10;
+if(x = 10)
+   ;
+
+
+bad code
+işini yapan kod ama boyle değilde söyle yap gibi
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //const T* turunde string literallere dikkat
+
+
+
+    //dikkat string literallerine
+
+    //string literalleri degistirlemez
+
+    //char *
+
+    char *cPtr = "orhan";
+    *cPtr = 'S'; //undifened behaiovar // bu dogru demek degil
+
+    const char *Cptr1 = "ozturk";
+    *Cptr1 = "S"; //C de granti altina alırız hatayi
+
+    //C++ da iki kullanımda sentask hatası
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //T*  --> void * istedimiz turden atama yapabiliriz
+
+    //Bu atamaların hi birinde yanlıslık yok C de C++ da gecerli
+
+    int x = 10;
+    unsigned long y = 12;
+    double dval = 5;
+    char str[] = "orhan";
+    void *vptr = &x;
+    vptr = &y;
+    vptr = &dval;
+    vptr = str;
+
+    //void * ---> T* donusum C de gecerli C++ sentaks hatası
+    int z = 10;
+    void *vptr1 = &z;
+    int *iptr = vptr1;
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //void * ---> T* donusum C de gecerli C++ sentaks hatası
+
+    size_t n;
+
+    int *pd = malloc(n * sizeof (int));
+    //int *pd = (int *)malloc(n * sizeof (int));
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
