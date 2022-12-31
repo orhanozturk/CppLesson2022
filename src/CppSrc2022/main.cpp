@@ -2,15 +2,22 @@
 
 using namespace std;
 
-
 int main()
 {
-    //void * ---> T* donusum C de gecerli C++ sentaks hatası
+    //bir pointer referans olabilirmi
 
-    size_t n;
+    int x = 10;
+    int y = 30;
 
-    //int *pd = malloc(n * sizeof (int));
-    //int *pd = (int *)malloc(n * sizeof (int));
+    int *p{ &x };
+    int * &rp = p; //int * tur belirtir ve pointe p turu saklanır rp de
+
+
+    rp = &y; // p ye y'ni adresi atandı
+
+    *rp = 99; //  y = 99
+
+    cout << "y : " << y << "\n";
 
     return 0;
 }
@@ -18,4 +25,3 @@ int main()
 
 /***************************************************/
 /***************************************************/
-

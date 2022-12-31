@@ -869,8 +869,707 @@ int main()
 
 /***************************************************/
 /***************************************************/
+31.12.2022 Cumartesi 3.Ders
+
+#include <iostream>
+
+using namespace std;
+
+//#define      NULL       (void *)0
+
+struct Data{
+
+};
+
+int main()
+{
+    //artık C++ da null olarak nullptr kullanacaz
+    //C++11 ile dile eklendi
+   int *ptr = nullptr;
 
 
+   //NULL pointer nedir?
+   //NULL pointer bir macrodur
+
+   int *ptr1 = NULL;
+
+
+   //C de NULL pointer yerine
+   int *p = 0;
+   //Derleyici 0 degerini NULL pointer'a donusturuyor
+
+
+   //Otomatik (implicit) pointer convertion (array decay)
+   /*
+    * 1- array to pointer convetion
+    * 2- function pointer convertion
+    * 3- NULL pointer convertion
+    */
+
+
+   //0 ve NULL pointer bazı dezavantajları var
+   //C++11 ile nullptr
+   //nullptr bir adress sabiti
+   //nullptr_t türüdür
+
+   int *ip = nullptr;
+   double *dp = nullptr;
+   Data *data = nullptr;
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Initialization - ilk deger verme
+
+    //C de tek bir yontem var, ilk deger verme sentaksında
+    //C++ da ise bir çok yöntem mevcut
+
+    /*
+     * ilk deger verme C de
+     * T x = expr;
+     */
+
+    //C++ da, Bu copy initialization dır
+
+    /*
+    int x = 10;
+    double dval = 11.2;
+    */
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//C ve C++ da bu kural aynı gecerli
+
+
+int a; //0 sıfır degeri ile hayata geliyorlar
+
+int main()
+{
+    //Initialization - ilk deger verme
+
+
+    int a; //çöp deger var
+
+    static int y; //0 degeri ile geliyor
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //Initialization - ilk deger verme
+
+    int x; //default initialization
+
+    //zero initialization
+    /*
+     * aritmatik türden değişkenlerin degeri 0
+     * bool turden degişkenlerin degeri false
+     * pointer değişkenlerin degeri nullptr olacak
+     */
+
+    //Global degişkenler için gecerli
+    //static anahtar için gecerli
+
+    int y;//default initialization
+
+    int *p; //indertermined value
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10; //copy initialization
+
+    //C++ eskide ve yenide gecerli
+    int y(10); //direct initialization
+
+
+    //modern C++11 deyeni gelen bir atama
+    //neye ilk deger  verirsen ver {} kullanılabilir
+
+
+    int z{10}; //uniform initialization  C++11
+                //brace initialization
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+   //C++ da 3 tur ilk deger verme yontemi var
+    int x = 10; //sadece C de var
+    int y(10); //direct initialization //C++ eski ve yinede var
+    int z{10}; //brace initialization C++11 var
+    int t{};
+
+    //{}  ilk deger verme yontemi en cok kullanım hale geldi
+
+
+    //Neden bu ilk deger verme metodu kullnacaz
+
+    //narrowing convertion
+    double dval = 15.23;
+    int x1 = dval; //gecerli ama veri kaybına neden olur
+    int y1(dval);  //gecerli ve veri kaybına
+    int z1{dval};  //gecerli değil
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+struct Data{
+
+};
+
+struct Orhn{
+    Orhn(Data);
+};
+
+int main()
+{
+   //most vexing parse
+   //scott meyers tarafından isimlendirilmiş - uydurulmus terim
+
+    //derleyici bunu fonksiyon bilfdirimi olarak gordugu için
+    //{} kullanmanız gerekli
+    Orhn orhnData(Data());
+
+    //{} ne ise yarar
+    //daraltici donusum gecersiz
+    //most vexing parse onler
+    //uniform bir yapı sunar
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+   //{}
+    //pointer diziler gecerli
+    //Referanslara ilk deger verilmesin
+    //Her de kullnabiliriz
+
+    int a[]{1, 2, 3};
+    int *b{a};
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+struct Data{
+
+};
+
+int main()
+{
+    //dikkat
+    int x; //default initialization
+    int y{}; //value initialization
+    int z(); //bu function decalration -- fonksiyon tanımı
+
+   Data mydata();
+
+
+   //bunlar ilk deger verme
+   int x1(10);
+   int y1{20};
+
+   /*
+    * soru bu iki ifade aynı ifademi
+    *
+    * evet aynı ifadelerdir
+    *
+    * int a[] = {1, 2, 3};
+    * int b[]{1, 2, 3};
+    */
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int x; //default initialization
+    int y{}; //degeri sıfır -- value initialization
+    bool flag{}; //degeri false -- value initalization
+    int *p{}; //degeri nullptr - value initialization
+    int z{20}; //brace/uniform initialization
+
+
+    int t(10.3); //narrowing converiton
+
+
+    for (int i{}; i < 10; ++i) {
+        cout << "i : "  << i << "\n";
+    }
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Çıkıs Giriş işlemleri
+
+    //cout   global değişken ismi
+    //std::  namespace
+    //<<  operator overloading
+
+    std::cout << "orhan";
+
+    //std::cin >>;
+
+    int x = 10;
+
+    //deryeyici bunu bir fonksiyon yapılan cagrıya donusturur
+    cout << x;
+    cin >> x;
+
+    //<< ilk cagrılan global fonksyion
+    //member fonksiyonu oluyor
+    cout << "x : " << x << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Type deduction  -- tur cıkarımı
+
+
+    /*
+     * C de bir değişkenin türünü yazmak zorundayız
+     * C++ da type deduction ile derleyici türün ne oldugunu belirler
+     */
+
+    //Type deduction için kullanılan bir cok keyword var
+
+    //auto
+    //decltype
+    //template'ler
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //int x = 10;
+    auto x = 10; //deryici dekenin ilk deger veren fiadesine bakarak anlıyorum
+
+    int ival = 10;
+    auto x1 = ival; //int
+    auto y1 = ival + 1.2; //double
+
+    x1;
+    y1;
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+
+double foo();
+
+
+int main()
+{
+    //auto ile değişken tanımlarsak ilk deger vermek zorunlu
+
+
+    //Soru
+    //tur cıkarımı programın calısma zamanına ilişkisi varmı
+    //Tamamıyle compile time da gerceklesiyor
+
+
+    //AAA
+    //almost always auto
+
+    /*
+     * 1
+     * ilk deger vermenin zorunlu hale getirilmesi
+     */
+    //auto x;
+
+      /*
+       * 2 karmasık terimler basit hale getiriilir -- kodlama hatası azaltılır
+       */
+    //int *(*fp)(int *, int *);
+
+    //std::vector<std:set<int,...... ///boyle gider
+
+    //auto ile turlerını cıkartalım
+
+
+    auto fp = strcmp;
+    auto fp1 = &strcmp;
+
+
+    int (*fp2)(const char *, const char *) = strcmp;
+
+
+    /*
+     * 3
+     * kodun degistirilmesi fyadasi
+     */
+
+    auto x = foo();
+    //Peki auto keyword zararları varmı ?
+
+    //Soru
+    //Sınıfım var, sınıfımın elemanlarını auto olmaz
+
+    //Generic programlamada agırlıklı kullnılır
+    //fonksiyonların geri donus degerinin anlasılmasında kullanılır
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Referans Semantiği
+
+
+Referans bir nesnenin yerine gecen bir isimdir
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int x = 10;
+
+    int *ptr = &x;
+
+    (*ptr) = 20; // x kullnaırım- pointerda kullanım boyle
+
+
+    //Bunun yerine referans semantiği kullnacaz
+
+    /*
+     * Referans semantiğinde  arka tarafta kendisi yukarıdaki işlemi ypaıyor
+     * bir zararı yok
+     * Generik programlamada cok iyi entegre olmus durum
+     */
+
+
+
+
+    return 0;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Eski C++ da refereans semantiği vardır
+    //Lvalue reference -- sol  taraf referansı
+
+
+    //modern C++ dile Rvalue reference eklenmiştir  -- sag taraf refereansı
+
+    //referans dediğimiz aksini belirmediğimiz sürece aklımıza Lvalue reference gelecek
+
+
+    //Referanslar için & kullanırlır
+
+    int x = 10;
+    int &r = x;
+
+    r = 34; //x = 34;
+    ++r; // ++x;
+
+    int *p = &r; // x adresi
+
+    return 0;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Referans değişken olusturma
+    //Referans değişkenini ilk deger vermeden olusturmamız mumkun değil
+
+    //int &r; //sentaks hatası
+
+    //Bir referans bir değişken atandıktan sonra baska bir değişkene atanamaz
+
+    int x = 10;
+    int y = 12;
+
+    int &r1 = x;
+
+    r1 = y; // x = y;
+
+
+    //referanslar kendileri const * dır
+
+    int *const p = &x; //top level const
+    //p is a const pointer
+    p = &y;
+
+
+    //r2 scope alnının her yerinde x temsil eder
+    int x1 = 10;
+    int &r2 = x;
+
+
+
+    return 0;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+C de
+
+value category
+L value expresion
+R value expresion
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Eger referanalar atanan deger sag taraf degeri ise
+    //const ise sentaks hatasıdır
+
+    //int &r = 10; //sentaks hatası
+
+
+    int x = 10;
+    int *ptr = &x;
+
+    int &r1 = *ptr; //  r1 x'i temsil eder
+
+
+    return 0;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //hepsi x temsil
+    int x = 10;
+    int &r1 = x;
+    int &r2(x);
+    int &r3{x}; //brace
+
+    ++r1; //++x
+    ++r2; //++x
+    ++r3; //++x
+
+    cout << "x : " << x << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int x = 10;
+    int &r = x;
+
+    int *p = &r; //x in adresi
+
+    r = 20; // x = 20
+    ++*p; // x = 21
+
+
+    cout << "x : " << x << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //bir pointer referans olabilirmi
+
+    int x = 10;
+    int y = 30;
+
+    int *p{ &x };
+    int * &rp = p; //int * tur belirtir ve pointe p turu saklanır rp de
+
+
+    rp = &y; // p ye y'ni adresi atandı
+
+    *rp = 99; //  y = 99
+
+    cout << "y : " << y << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
 
 
 
