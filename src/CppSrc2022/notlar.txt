@@ -1571,10 +1571,813 @@ int main()
 /***************************************************/
 /***************************************************/
 
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Diziye referans alınabilir
+
+    int a[5] = {1, 2, 3, 4, 5};
+    int (*p)[5] = &a; //a nın adresini tutan pointer
+
+
+    int (&ra)[5] = a; //ra demek a demek
+
+    for (int i = 0; i < 5; ++i)
+    {
+        cout << ra[i] << " ";
+    }
+
+    cout << "\n";
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //Diziye referans alınabilir
+
+    int a[5] = {1, 2, 3, 4, 5};
+    int (*p)[5] = &a; //a nın adresini tutan pointer
+
+
+    int (&ra)[5] = a; //ra demek a demek
+
+    for (int i = 0; i < 5; ++i)
+    {
+        cout << ra[i] << " ";
+    }
+
+    cout << "\n";
+
+
+    auto &ra1 = a;
+
+    for (int i = 0; i < 5; ++i)
+    {
+        cout << ra1[i] << " ";
+    }
+
+    cout << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
 
 
 
 
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    auto &x; //ilk deger vermezsek sentaks hatası
+    int &r = 10; //sentaks hatası
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Value
+
+
+a  expression ifadesi
+
+a + 5
+
+x * y + c > 14;
+
+Her ifadenin bir data type oldugu gibi
+Her ifadenin bir value categoryside var
+
+
+L value (left value) : Nesne gösteren ifadeler
+X value (expiring value): Bir kimliği yok ama bellekte bir nesneye karşılık geliyor
+PR Value (Pure R value ): İfadeinin kimliği (bellekte yeri) yok, nesneye karşılık gelmiyor
+
+GL Value : X value ve L value dan olusur.
+R value : X value ile PR valuedan olusan kumeye denir
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int a;
+    a; //Lvalue
+
+    int *ptr = &a;
+    *ptr; //Lvalue
+
+    int da[4]{};
+    da[2]; //Lvalue
+
+
+    //C ve C++ arasında L value R value arasıda farklılıklar var
+
+                  C      C++
+    x++           R       R
+    x--           R       R
+    ++x           R       L
+    --x           R       L
+    a, b          R       L
+ x > 0 ? y : z    R       L
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+
+int main()
+{
+    int x = 10;
+
+    int &r = x++; //sentaks hatası
+    int &r1 = ++x; //gecerli
+
+    int y = 34;
+    int &r2 = (x, y); //gecerli
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Undefined  behavior (tanımsız davranış)
+unsecified behavior (belirlenmemiş davranış)
+implementation defined (derleyiciye baglı davranış)
+
+
+undefined behaiovar
+tanımsız davranış   = programınız çöp
+tanımsız davranış   = programınız başınıza belle
+tanımsız davranış   = İşinizi kaybetme nedeni
+
+
+const anahtar sözcüğü ile tanımlanmış değişkenleri değiştirme girişimi tanımsız davranıs
+
+string literalleri degiştirir seniz tanımsız davranısa neden olursunuz
+işsaretli tam sayınız var , taşması tanımsız davranız
+otomatik nesneleri çöp değerleri ile kullanamk tanımsız davranıs
+bir fonksiyonun return etmemesi tanısmız davranıs
+
+
+
+
+unspecified behavior -- (belirlenmemiş davranış)
+
+belirlenmemiş davranıs tanımsız davranıs değildir
+Programın ne sekilde davranacagı derleyicinin ürettiği koda baglı
+Derleyici ne sekilde davranacağı konusunda herhangi bir sekşilde dokumantasyon yapmak zorunda değil
+Standart derleyicilere iki veya daha fazla secenekten kod üretme imanı veriyor
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int f1();
+int f2();
+
+int main()
+{
+    int x = 10, y = 5;
+
+    //S1
+    //derleyicinin urettiği kod true mu false mu oalaiblir
+    //tamamen derleyicinin nasıl kod urettiğinie baglı
+    bool flag = &x > &y;
+
+    //S2
+    //Derleyici her defasında aynı sekilde kod uretmez
+
+
+    //S3 f1 mi once f2 mi once cagrılır?
+    int z = f1() * 3 + f2();
+    //derleyicinin urettiği koda göre f1 ve f2 önce cagırma işlemi farklılık gösterebilir
+
+
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+int g = 10;
+
+int f1(int x, int y);
+
+int f2()
+{
+    g += 5;
+
+    return 100;
+}
+
+int f3()
+{
+    return g - 5;
+}
+
+int main()
+{
+    ///Derleyici istediği sıraya göre kod uretir
+    ///hangisinin önce cagıralacagı ile ilgili bir garanti yok
+    f1(f2(), f3());
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+implementation defined (derleyiciye bağlı davranış)
+
+implementation ile unspecified arasında fark yok
+
+cunku implementation unsecified'in alt kumesi
+
+fark su dokumantasyon etmek zorunlu değil
+
+derleyici 2 veya daha fazla secenek arasından secim yapacak
+ama nasıl secim naptıgını dokumante edecek
+
+
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+
+int main()
+{
+    char y;
+    //derleyici sign veya unsign olarak belirler ve dokumantasyon yapar
+
+
+    int x = -1;
+    x >> 1;
+    //0 veya 1 lemi beslenecek
+    //Derleyici secimine kalır ama dokumante eder
+
+    if(x >> 1 == -1)
+        cout << "dogrumudur";
+    else
+        cout << "yanlismdir";
+
+    size_t sz; //bir turun es ismi
+                //unsig int unsig long
+
+
+    int cx;
+
+    int32_t tcx;
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+refereans
+
+
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+
+    int *p = &x;
+    int **pp = &p;
+    int **&r = pp;
+
+    ++**r;  // x in degeri artrılır
+
+
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+void Swap(int *p1, int *p2)
+{
+    int temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+}
+
+
+int main()
+{
+    int a = 12;
+    int b = 55;
+
+    Swap(&a, &b);
+
+    cout << "a : " << a << "\n";
+    cout << "b : " << b << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+fonksiyonlara referans gecme
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+
+//referans semantigi
+//call by referans
+void Swap(int &r1, int &r2)
+{
+    int temp{r1};
+    r1 = r2;
+    r2 = temp;
+}
+
+
+int main()
+{
+    int a = 12;
+    int b = 55;
+
+    Swap(a, b);
+
+    cout << "a : " << a << "\n";
+    cout << "b : " << b << "\n";
+
+    return 0;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+//soru C de func fonksiyonu call by value  yada call by referans --- call by value
+//soru C++ de func fonksiyonu call by value  yada call by referans -- her ikisi ile
+
+int func(int r)
+{
+
+}
+
+int main()
+{
+    int x = 10;
+
+    func(x);
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+C de
+
+setter
+set function
+mutator
+output
+
+void func(T *ptr);
+
+
+get function
+getter
+input
+void foo(const T *ptr);
+
+
+
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+int main()
+{
+    int x = 10;
+    int &r = x; //x degistirilir
+    const int &rc = x;
+
+    ++rc;//sentaks hatası
+
+    ++x;
+
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+class Myclass{
+
+};
+
+void setter(Myclass &r); //r yi degistirip okuyabiliriz demek
+void accessor(const Myclass &r); //sadece r yi okumak amaclı
+
+int main()
+{
+
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+void func(const int &r);
+//void func(int &r);
+
+int main()
+{
+    int x = 10;
+    const int y = 15;
+
+    func(x);
+    func(y);
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+
+int main()
+{
+    //int &r = 10; //sentaks hatası
+
+    int y = 10;
+    const int &r1 = 10;
+    const int &r2 = y;
+
+    /*
+     * int temp_object{10}
+     * const int &r = temp_object;
+     */
+
+    //call by value yapmak istemeyorum maliyeti yuksek
+
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+
+int main()
+{
+    const int &r1 = 10;
+    int &r2 = r1; //sentaks hatası const int & --> int &
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+    int &r1 = x;
+    int &r2 = r1; //r2 de x i temsil eder, referans to referans yok
+    int &r3 = r2;
+
+
+    ++r1;
+    ++r2;
+    ++r3;
+
+    cout << "x : " << x << "\n";
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//function return pointer
+int *func()
+{
+    static int x = 10;
+
+    return &x;
+}
+
+//function return referans
+int &foo()
+{
+    static int x = 10;
+
+    return x;
+}
+
+int main()
+{
+    func();
+    foo();
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+int g = 45;
+
+int &foo()
+{
+    return g;
+}
+
+int main()
+{
+    foo(); //Lvalue
+
+    foo() = 15;
+
+    cout << "g : " << g << "\n";
+    ++foo();
+    cout << "g : " << g << "\n";
+
+    int &r = foo(); //r demek g demek
+
+    r = 1234;
+
+    cout << "g : " << g << "\n";
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//pointer semantigi ile de hatalı durumdur
+int *func()
+{
+    int x = 10;
+
+
+    return &x;
+}
+
+//referans semantigi ile de hatalı durumdur
+int &foo()
+{
+    int x = 10;
+    //
+
+    return x;
+}
+
+int main()
+{
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+struct Data{
+    int x, y, z;
+};
+
+struct Data *func(struct Data *p)
+{
+
+
+    return p;
+}
+
+
+struct Data &func(struct Data &r)
+{
+
+
+    return r;
+}
+
+
+int main()
+{
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//ilk deger vermek referans ve pointer zorunlumu?
+//referans ta ilk deger zrounlu
+//pointerda zorunlu değil
+
+
+
+
+int main()
+{
+
+    //pointer const olmadıgı sürece farklı farklı nesneleri gosterebilirmiyiz?
+    int x = 4;
+    int y = 1;
+
+    const int * p = &x;
+    p = &y;
+
+
+    //referans farklı farklı nesneleri gosterebilirmiyiz?
+
+    int &r = x;
+
+
+    //pointer dizisi olurmu ?
+
+    int b, n, m;
+    int *ptr[] = {&b, &n, &m};
+
+    int &rPtr[] = {b, n, m}; // böyle birsey yok referans array diye birsey yok
+
+
+
+    //bir dizi hem referans hem adres olabilirmi?
+
+    int a[10] = {0};
+    int (*ap)[10] = &a;
+    int (&ar)[10] = a;
+
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//nullptr = hic  bir yeri gostermez adres sabiti
+
+//T * func(); //fonksiyon basarılı olmazsa nullptr
+
+
+//void foo(T* ptr) //eger bana nullptr gecersen su işlemleri yaparım demek
+
+
+
+int main()
+{
+
+    time_t time(time_t *p); //nullptr ise sadece senden time bilgisi sitiyorum
+    //gecerli zamn gecersek işler değişir
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
 
 
 
