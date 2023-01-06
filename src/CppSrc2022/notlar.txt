@@ -2380,6 +2380,1386 @@ int main()
 /***************************************************/
 
 
+Auto - Referans
+
+
+3 tane patern
+
+1-
+auto x = expr;
+
+2-
+auto &y = expr;
+
+3-
+auto &&z = expr; // bunu ileri ele alacagız
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    auto x = 10;
+    x;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+1-
+auto x = expr;
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int y = 10;
+
+    auto x = y; //
+
+    x;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    const int y = 10;
+    auto x = y; //const luk goz ardı edilir int türüyüm der x
+
+    x = 23;//burada const olsaydı atama yapamazdık
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int y = 10;
+    int &r = y;
+
+    auto x = r; //referanslıkta düşer x in türü int
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int y = 10;
+    const int &r = y;
+
+    auto x = r; //constluk ve & düşer x in türü int
+
+    //int x = r;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int a[10] = {};
+
+    auto x = a; // int *x = a; dizinin ilk ogesinin adresine donusturulecek
+
+    //auto x = &a[0];
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int const a[10] = {};
+
+    auto x = a; // const int *x = a; dizinin ilk ogesinin adresine donusturulecek
+
+    x;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    auto x = "orhan"; //const char *
+    x;
+    //const char * y = "orhan";
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int foo(int);
+
+int main()
+{
+   auto x = foo;
+
+   x(2); //foo(2);
+
+   //int (*x)(int) = foo; //bununla arasında hiç bir fark yoktur
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+2
+auto &x = expr;
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //l value referans olmalı yoksa sentaks hatası
+    auto &x = 10; //sentaks hatası
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int y = 10;
+    auto &x = y; //int & x
+
+    x;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int ***ptr;
+    auto &x = ptr; //gecerli
+
+    x;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int (*fptr)(int, int);
+    auto &x = fptr; //geçerli
+    x;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    const int x = 10;
+
+    auto &r = x;  //constluk düşmez
+
+    //const int %r = x;
+
+    r = 12; //sentaks hatası
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int a[5] = { 0 };
+    auto &r = a;
+    //int [5]
+    //int (&r)[5] = a;
+
+    r[2] = 23;
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    const int a[5] = { 0 };
+    auto &r = a;
+    //const int [5]
+    //const int (&r)[5] = a;
+
+    r[2] = 23; //sentaks hatsı
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    auto &x = "orhan";
+    //const char[6]
+    //const char (&x)[6] = "orhan"
+
+    x;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int foo(int, int);
+
+int main()
+{
+    int (*fptr)(int, int) = &foo;
+
+    auto &rfp = foo;
+    //int (&)(int, int);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+
+    const auto y = x; //gecerli
+
+    y = 12; //const oldugundan gecersiz
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+
+    const auto &y = x; //gecerli
+
+    y = 12; //const oldugundan gecersiz
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    static int x = 10;
+
+    auto y = x; // int
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+
+    auto &r1 = x; // int &r1
+    const auto &r2 = x;
+
+    r2;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+
+    int *ptr = &x;
+
+
+    //ikiside int *
+    auto ptr1 = &x; //int *
+
+    ptr1;
+
+    auto *p = &x; //int *
+
+    p;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Fonksiyıonların varsayılan argüman alması
+default arguments
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+void func(int x, int y, int z);
+
+int main()
+{
+    func(10, 20, 30);
+    func(2, 3); //sentaks hatası
+    func(); //sentaks hatası
+    func(1, 2, 3, 4); //sentaks hatası
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//tek isna cözüm bu suan kibilgilerimizle
+
+void func(int x, ...);
+
+int main()
+{
+    func(10, 20, 30);
+    func(2, 3); //sentaks hatası
+    func(2); //sentaks hatası
+    func(1, 2, 3, 4); //sentaks hatası
+
+    printf(const char *p, ...); //variadic fonksiyondu
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+n tane parametren var
+
+
+default fonksiyonlar
+
+compile time ilişkin n
+
+
+#include <iostream>
+
+using namespace std;
+
+void func(int, int, int = 10);
+
+int main()
+{
+    func(1, 2, 3); //func(1, 2, 3);
+    func(1, 2); //func(1, 2, 10);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+void func(int = 30, int = 20, int = 10);
+
+
+int main()
+{
+    func(); //func(30, 20, 10);
+    func(1); //func(1, 20, 10)
+    func(1, 2, 3); //func(1, 2, 3);
+    func(1, 2); //func(1, 2, 10);
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+void func(int, int = 20, int); //sentaks hatası
+
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+void func(int &r);  //Lvalue ile cagırmalıyım
+void foo(const int &r); //Lvalue ve Rvalue ile cagırabiliriz
+int &bar(void); //dogrudan Lvalue
+
+int main()
+{
+    const int &r = 10;
+    //int temp = 10;
+
+    int x = bar();
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyon cagırma yontemleri
+
+//T bir türü temsil eder
+void f1(T x); //call by value -- deger kopyalama
+void f2(T *p); //set fonksiyonu --- nesnenin adresi ile
+void f3(const T *p); //get fonksiyon -- nesnenin sadece degerini okuma
+
+//referans karsılıkları
+void f22(T &r); //call by referans
+void f33(const T &r);
+
+//fonksiyonun geri dönüşleri inceleme
+
+const T *f5(); //adres geri doner ama salt okuma amaclı
+const T &f55(); //referans geri doner salt okuma amaclı
+
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//parametrelere isim verilebilir
+void func(int x, int y, int z = 30);
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+int g = 45;
+
+void func(int x, int y, int z = g + 5);
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+int g = 45;
+int func(int x, int y);
+void foo(int x = func(2, 3));
+
+int main()
+{
+    foo();
+    foo(14);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+int func(int x, int y = 99);
+void foo(int x = func(45));
+
+int main()
+{
+    foo(); //foo(func(45, 99));
+    foo(14); //foo(14);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+int foo()
+{
+    cout << "foo cagrildi\n";
+    return 1;
+}
+
+int g = foo();
+
+int main()
+{
+    cout << "main cagrildi\n";
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+void func(int x = 1, int y = 2, int z = 5);
+
+int main()
+{
+    func();
+    func(10, 20);
+    func(10, 20, 30);
+    func(10);
+
+}
+
+void func(int x, int y, int z)
+{
+    cout << x << ", " << y << ", " << z << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+int g = 23;
+
+void func(int &r = g); //varsayılan arguman olarak referans seklinde verebiliriz
+
+int main()
+{
+    int a = 4;
+    func(a);
+    func(); //func(g);
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+void func(int *p = nullptr); //varsayılan arguman olarak pointer seklinde verebiliriz
+
+int main()
+{
+    int a = 4;
+    func(&a);
+    func(); //func(nullptr);
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+void func(const char *p = "orhan"); //varsayılan arguman olarak string literals seklinde verebiliriz
+
+int main()
+{
+    func("ozturk");
+    func(); //func("orhan");
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+//orhan.hpp
+void func(int x, int y, int z);
+
+//fonksiyon overloading ile bunu yapabilirim
+void func(int x, int y, int z = 0);
+
+
+int main()
+{
+    func(1, 2, 3);
+    func(1, 2);
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+//orhan.hpp
+void func(int x, int y, int z = 0);
+void func(int x, int y = 10, int z);
+
+
+int main()
+{
+    func(1, 2, 3);
+    func(1, 2); //func(1, 2, 0)
+    func(1); //func(1, 10, 0);
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//varsayılan arguman
+
+void process_date(int day, int mon, int year = -1);
+
+//-1 ile devam ederse  sunu yaparım
+//farklı bir deger gecilirse sunu yaparım
+
+int main()
+{
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+Sag taraf referansı - R value referance
+
+R value referance  (C++11) ile eklendi
+
+
+R value referance'ın dile eklenme sebepleri
+1- move semantics (tasima semantiği) -- sınıflar konusunda
+2- perfect forwarding (mukemmel gonderim) -- Generic programlamada
+
+
+
+L value referans
+
+T &r = x;
+
+T &r = 10; //sentaks hatası
+
+
+
+sag taraf referansı
+
+T &&r = 10;
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+
+int main()
+{
+
+    int &&r = 10; //ilk deger verilir
+
+    r;
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+
+int main()
+{
+
+    int &&r; //sentaks hatası -- ilk deger verilmez
+
+    r;
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+
+int main()
+{
+    int x = 10;
+
+    int &&r = x; //sentaks hatası -- L value atayamayız
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+
+int main()
+{
+    int x = 10;
+
+    int &&r = x + 5; // + operatoru --> R value
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+
+int main()
+{
+    int x = 10;
+
+    int & &r = x + 5; //sentask hatası
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+int foo();
+
+int main()
+{
+    int &&r = foo(); //gecerli
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+int &foo();
+
+int main()
+{
+    int &&r = foo(); //sentaks hatası
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+//mulakat sorusu
+
+
+
+int main()
+{
+    int &&r = 10;
+    //r R value mu L value mu
+    r; //L value
+
+    int &rf = r; //kanıt
+
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//R value referance
+
+//mulakat sorusu
+
+
+
+int main()
+{
+    int &&r = 10;
+
+    r = 20; // gecerli ama ileride anlayacaz bunun nedenini
+
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+Bazı operatorlerin olsutrdugu ifaleri
+
+R value
+ a > b
+  x == y
+  x && y
+  !x
+
+ x & y
+ x++
+ x--
+
+
+Lvalue
+
+ ++x
+ --x
+ x, y
+
+ x > 0 ? x : y; ternary operator
+ (x = 20)   lvalue
+ (x = 20) = 30;
+
+
+
+T &&r = R val
+T &&r; //sentaks hatası
+
+
+
+Auto keyword -- type deduction
+
+auto x = expr;
+
+auto &x = expr;
+
+auto &&x = expr; //Sakın sakına sag taraf referansı ile karıstırmayınız
+
+Önemli
+
+Tur cıkarımı var ise ve işin içinde && bildirgeci kullanılmıs ise
+böyle tanıtılan isimlere
+forwarding referance yada universal referance denmektedir .
+
+
+-----------------------------------
+
+Type deduction' a geri donelim
+
+decaltype (specifier)
+
+decaltype(ifade) // bu bir türe karsılık gelir ornegin int
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int x = 10;
+
+    decltype (x); //int turu
+
+    decltype(x) y = 10; // y nin turu int türünden ilk deger 10 ile geldi hayata
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int x = 10;
+
+void func(decltype (x)); //function parameters
+
+int main()
+{
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int x = 10;
+
+//fonksiyonun geri donusu içinde kullanılabilir
+decltype (x) func(decltype (x)); //function parameters
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+decaltype ilişkin 2 kural seti var
+
+1- kural seti  -- parantez içine dogrudan bir isim girilmesi
+
+   decaltype(x)
+   decaltype(x.y)
+   decaltype(ptr->a)
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+struct Data{
+    int mx;
+};
+
+int main()
+{
+    int ival;
+    double dval;
+    Data data;
+
+    decltype (ival) x;
+    decltype (dval) y;
+    decltype (data) z;
+    decltype (data.mx) t; //int
+
+    Data *p = &data;
+    decltype (p->mx); //int
+
+
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+struct Data{
+    int mx;
+};
+
+int main()
+{
+    const int cx = 10;
+    decltype (cx) x = 20; //const luk auto ki gibi düşmez
+    //const int x = 20;
+
+    x = 30; //sentaks hatası
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+struct Data{
+    int mx;
+};
+
+int main()
+{
+    int x = 10;
+    int &r = x;
+    decltype (r); //int & turudur, auto daki gibi referanslık düşmez
+
+    auto t = r; //int
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+struct Data{
+    int mx;
+};
+
+int main()
+{
+    int x = 10;
+    int &r = x;
+    decltype (r) y; //sentaks hatası ilk deger verilmediğinden
+    //int & turudur, auto daki gibi referanslık düşmez
+
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+struct Data{
+    int mx;
+};
+
+int main()
+{
+    int a[] = {1, 2, 3, 4};
+
+    decltype (a) b; //int b[4], dizi pointer'a donusturulmez
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+2- kural decaltype
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
