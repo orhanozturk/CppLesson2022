@@ -3727,6 +3727,527 @@ int main()
 
 2- kural decaltype
 
+  decaltype(expr)  isim olmayan durumlar
+
+  decaltype((x))  2 kural seti
+  decaltype(x)  1 kural icin isim expr
+
+
+
+decaltype(19)
+decaltype(x+5)
+decaltype(x++)
+decaltype((y))
+decaltype(*ptr)
+decaltype(a[5])
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //PR VALUE
+    decltype (10) x;    //int turu
+    x;
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //İFADE pr value ise
+
+    int x = 10;
+    decltype (x + 3.4) y;    //double turu
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //İFADE L value ise
+
+    int x = 10;
+    decltype (++x) y = x;    //int &
+    //int &y = x
+    y = 22;
+    cout << "x : " << x << "\n";
+
+}
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+Eğer decaltype belirtecinin operandi bir isim değil ise
+isim formunda olmayan bir ifade ise bu durumda
+
+
+PR value expresion deger kategorisinde ise
+decaltype ile elde edilen tur T turudur
+
+L value expresion deger kategorisinde ise
+decaltype ile elde edilen tur T& turudur
+
+X value expression deger kategorisinde ise
+decaltype ile elde edilen tur T && turudur
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+    int *ptr = &x;
+
+    //L value bir expression
+    decltype (*ptr) y = x;    //int &
+    y = 22;
+    cout << "x : " << x << "\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+
+    int a[10][20] {};
+
+    //L value
+    decltype (a[2][3]) y = x;    //int &
+    y = 22;
+    cout << "x : " << x << "\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int &&foo();
+
+int main()
+{
+
+    decltype (foo()) y = 10; //int &&
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+ozet
+
+decaltype(isim) bu değişkenin turu ne ise türü o ve const'luk ve referanslık düşmez
+decaltype(isim formunda değil ise) T , T&, T&&
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int &&foo();
+
+int main()
+{
+    int x = 10;
+
+    decltype (x); //int
+
+    //Lvalue
+    decltype ((x)); //int &
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//soru mulakat
+
+int main()
+{
+    int x = 10;
+
+    ++x;
+    size_t y = sizeof (++x);
+    //derleyici burada kod uretme
+    //unevaluated contex devererye girigi için sizeof operatorunda ++x için kod üretilmez
+
+    cout << "x = " << x << "\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+decaltype da unevaluated contex olusturur
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//soru mulakat
+
+int main()
+{
+    int x = 10;
+
+    decltype (++x) y = x;
+    //unevaluated contex
+
+    cout << "x = " << x << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//soru mulakat
+
+int main()
+{
+    int x = 10;
+
+    decltype (++x) y = 10; //int & oldugunda sentask hatası
+    //unevaluated contex
+
+    cout << "x = " << x << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//soru mulakat
+
+int main()
+{
+    int x = 10;
+    int *ptr = nullptr;
+
+    decltype (*ptr) y = x; //gecerli
+    //burada nullptr isleme alınmaz
+    //eger ele alınırsa tanımsız davranış olur
+
+    cout << "x = " << x << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+constexpr
+
+C++11 ile dile aklenen anahtarsözcük
+
+const'tan ayrı bir anahtarsözcük
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //C++ da const anahtar sözcüğü ile olsuturulan ifade hayata ilk deger alarak gelmek zorunda
+    const int x = 10;
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    //C++ da const anahtar sözcüğü ile olsuturulan ifade hayata ilk deger alarak gelmek zorunda
+    const int x = 10;
+
+    int a[x] = { 0 };
+
+    int y = 12;
+
+    switch (10) {
+        case x: break;
+    }
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int y = 15;
+    //
+    //
+    const int x = y + 10; //sabit ifadesi olmuyordu
+
+    int a[x] = { 0 }; //sentaks hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int foo();
+
+int main()
+{
+    const int x = foo(); //sabit ifadesi olmuyordu
+
+    int a[x] = { 0 }; //sentaks hatası
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //ilk deger vermek zorunlu
+    //x ifadesi salt okuma amaçlı
+    constexpr int x = 10;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int y = 10;
+    constexpr int x = y; //sentaks
+
+    //x ilk deger veren ifadeler sabit ifadeleri olması lazım
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    constexpr int x = 10;
+    constexpr int y = 20;
+    constexpr int z = 30;
+
+    (x + y + z) * 3;
+
+    int a[(x + y + z) * 3];
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+constexpr  c++11 fonksiyon modeli
+
+
+constexpr functions
+
+öyle bir fonksiyon ki belirli koşullar altında çağrı yapıldıgında derleme zamanında (compile)
+geri dönüş degeri sabit olarak elde edilecek
+
+
+constexpr C++11 ile ilk geldiğinde kısıltlamalı haldeydi
+constexpr functions oneliner olmak zorundaydı, yani sadece returnden olusan fonksiyonlardı
+
+constexpr int func(int x)
+{
+   return x *10;
+}
+
+
+C++14 ve C++17 ile böyle koşullar kalktı
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//sonuc ürettiği zaman compile time da
+//onliner bir fonksiyon
+constexpr int square(int a)
+{
+    return a * a;
+}
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//sonuc ürettiği zaman compile time da
+//onliner bir fonksiyon
+constexpr int square(int a)
+{
+    return a * a;
+}
+
+constexpr int ndigit(int ival)
+{
+    if(ival == 0)
+        return 1;
+
+    int digit_count = 0;
+
+    while (ival) {
+        ++digit_count;
+        ival /= 10;
+    }
+
+    return digit_count;
+}
+
+
+int main()
+{
+    constexpr int a = 10;
+    constexpr int b = 20;
+
+    square(a); //sabir ifade
+
+    int arr[square(a)];
+
+    square(a * b + 3);
+
+    int dArr[square(a * b + 3)];
+
+
+    ndigit(a * b);
+    ndigit(a * b + 1200);
+
+
+    ndigit(square(a * b + 3));
+
+    int ar[ndigit(square(a * b + 3))] = { 0 };
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
