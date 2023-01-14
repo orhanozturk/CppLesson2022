@@ -137,8 +137,8 @@ int main()
 using namespace std;
 
 
-//C(C89) bool tür yok. C de bool türü yerine int türü kullanılır
-//C99 _Bool tür eklenmiştir.
+//C(C89) bool türü yok. C de bool türü yerine int türü kullanılır
+//C99 _Bool türü eklenmiştir.
 
 
 /*
@@ -4231,6 +4231,878 @@ int main()
 
 /***************************************************/
 /***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//constexpr fonksiyonları pure olmalı , static anahtar değişken tanımlama kanul etmez
+constexpr int square(int a)
+{
+    static int y = 12;//error
+
+    return a * a;
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+class MyClass{
+
+};
+
+//literal type kategorisinden olmalı geir dönüş türü
+constexpr int func(MyClass x)
+{
+
+    return x;
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//constexpr fonksiyonlara gonderilen deger sabit ifadesi olmak zorunda değil
+constexpr int func(int x)
+{
+    return x;
+}
+
+
+int main()
+{
+    int y;
+    cout << "bir sayi giriniz : ";
+    cin >> y;
+
+    func(y); //gecerli
+    //buradaki hesaplamayı compile time da yapmayacak run time da yapacak
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//constexpr fonksiyonlara gonderilen deger sabit ifadesi olmak zorunda değil
+constexpr int func(int x)
+{
+    return x;
+}
+
+int main()
+{
+    int y;
+    cout << "bir sayi giriniz : ";
+    cin >> y;
+
+    constexpr int b = 10;
+    constexpr int a = func(y); //sentaks hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+constexpr int factorial(int x)
+{
+    return x < 2 ? 1 : x * factorial(x - 1);
+}
+
+constexpr int ndigit(int ival)
+{
+    if(ival == 0)
+        return 1;
+
+    int digit_count = 0;
+
+    while (ival) {
+        ++digit_count;
+        ival /= 10;
+    }
+
+    return digit_count;
+}
+
+int main()
+{
+    constexpr int x = 5;
+
+    constexpr int y = ndigit(factorial(x + 5));
+    //derleme zamamnında elde ettik
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+derleyici constexpr kodunu görmeliki one göre sonuc üretsin
+bu sebepten constexpr fonksiyonları baslık dosyasında olmalıdır
+
+.h
+.hpp
+.cpp
+
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    constexpr auto x = 5; //gecerli
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+constexpr int get_prime(int x)
+{
+    constexpr int a[] = {0, 2, 22, 333, 44, 55, 26, 17, 68};
+
+    return a[x];
+}
+
+int main()
+{
+    constexpr int a = 3;
+
+    get_prime(a);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+constexpr int get_prime(int x)
+{
+    constexpr int a[] = {0, 2, 22, 333, 44, 55, 26, 17, 68};
+
+    return a[x];
+}
+
+int main()
+{
+    constexpr int x = 3;
+
+    decltype (x) y = 5;
+
+    get_prime(y);
+}
+
+/***************************************************/
+/***************************************************/
+
+C++ da tür dönüştürme operatörleri
+
+c de kullnaılan type cast operatörü
+double x;
+int y = (int)x;
+
+
+C++ da 4 tane tür dönüştürme operatörü var
+
+static_cast
+const_cast
+reinterpret_cast
+dynamic_cast
+
+
+C de bazı örnekler
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 10;
+    int y = 6;
+
+    (double)x/y;
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    unsigned int uval = 6567454; //4 byte
+
+    //2 btye
+    unsigned short *p = (unsigned short *)&uval;
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    //istinai durum
+    unsigned int uval = 6567454; //4 byte
+
+    char *p = (char *)&uval;//gecerli istisnai durum
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+1- static_cast  ---> static donusumler için
+2- const_cast  ----> const donusumler için
+3- reinterpret_cast ---> adreslere donusum için
+4- dynamic_cast --> inharetince kalıtım için
+
+
+kullanım
+
+ static_cast<double>(ival)
+
+
+
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main()
+{
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    int x, y;
+    cout << "iki tam sayi griiniz : ";
+    cin >> x >> y;
+
+    double t = static_cast<double>(x) / y;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+//c nin temel konuları
+
+int main()
+{
+    int x = -1;
+    unsigned int y = 1;
+
+    if(x > y)
+        cout << "evet dogru\n"; //burayı yazdıracak
+    else
+        cout << "hayir dogru degil\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//c nin temel konuları
+
+int main()
+{
+    char x = 178;
+
+    if(x == 178)
+        cout << "evet dogru\n";
+    else
+        cout << "hayir dogru degil\n"; //bu kısmı ele alacak
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+char *Strchr(const char *p, int c)
+{
+    while (*p) {
+        if(*p == c){
+            return const_cast<char *>(p);
+        }
+    }
+
+   //return const_cast<char *>(p);
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main()
+{
+    double dval = 123.3344;
+    unsigned char *p = reinterpret_cast<unsigned char *>(&dval);
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main()
+{
+    double dval = 123.3344;
+    unsigned char *p = const_cast<unsigned char *>(&dval); //sentask hatası
+
+    for (size_t i = 0; i < sizeof (dval); ++i)
+    {
+        cout <<  p[i] << " ";
+    }
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+enum Color {Black, Green, White};
+
+int main()
+{
+    Color mycolor{Green};
+
+    int x = mycolor; //bu legal
+
+    mycolor = 3; //sentaks hatası
+
+    int ival = 2;
+
+    mycolor = static_cast<Color>(3);
+    mycolor = static_cast<Color>(ival);
+
+}
+
+/***************************************************/
+/***************************************************/
+
+//#include <iostream>
+#include <cstdlib>
+
+//using namespace std;
+
+enum Color {Black, Green, White};
+
+int main()
+{
+    size_t n = 1000;
+
+    //char *p = (char *)malloc(n);
+
+    char *p = static_cast<char *>(malloc(n));
+    //bu örnek için istisna
+}
+
+/***************************************************/
+/***************************************************/
+
+
+//#include <iostream>
+#include <cstdlib>
+
+//using namespace std;
+
+enum Color {Black, Green, White};
+
+int main()
+{
+    const double *ptr = nullptr;
+
+    //char *p = const_cast<char *>(ptr); //legal degil
+    //char *p1 = reinterpret_cast<char *>(ptr); //legal değil
+
+    char *p = reinterpret_cast<char *>(const_cast<double *>(ptr));
+    char *p1 = const_cast<char *>(reinterpret_cast<const char *>(ptr));
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+İşlev yüklemesi -- Function overloading
+
+
+N tane fonksiyon var ama isimleri aynı verme işlemidir
+
+
+Peki bmyle bir işlemi yapmanın run time maliyeti var mı ?
+Hayır
+
+
+
+static binding    ---   early binding
+
+static binding
+Bir fonksiyonun çağrısı karsılgı hangi donksiyonun cagrıldıgını çeviri sürecinde anlasılıyorsa
+yani derleyici koda bakarak hangi fonksiypnun çağrıldıgını anlıyor ise işlev çağrısnın çağrılacak işleve
+baglnaması biçimine static binding - early binding denir
+
+
+dynamic binding  --- late binding
+Hangi fonksiyonun çağrıldıgını programın çalışma zamanında belli oluyor ise
+bu türlerde fonksiyona baglanması  dynamic binding  --- late binding denir
+
+
+fonksiyon overloading  static binding -- early binding dir
+
+function overloading var mı?
+varsa hangisini çağıracak?
+
+f1
+f1
+f1
+f1
+
+function overload resolution
+
+------------------------------------------
+
+
+işlev yüklemesinini olabilmesi için
+
+1- aynı isimli işlevler aynı kapsam (scope) bildirilmesi yada tanımlanması gerekli
+2- aynı isimli işlevlerin imzaları farklı olacak
+
+
+function signature -- imza
+
+geri dönüş türü hariç kalan kısım imzasıdır fonksiyonun
+int func(int , double); //func, int, double
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function redeclaration
+
+int foo(int x, int y); // func, int, int
+int foo(int, int); //func, int, int
+
+int main()
+{
+}
+
+int foo(int x, int y)
+{
+
+}
+
+int foo(int, int)
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function overloading değil
+
+int foo(int x, int y); // func, int, int
+double foo(int, int); //func, int, int
+
+int main()
+{
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function overloading -- EVET
+
+int foo(int x, int y); // func, int, int
+double foo(int, int, int); //func, int, int, int
+
+int main()
+{
+}
+
+int foo(int x, int y) // func, int, int
+{
+    return 1;
+}
+
+double foo(int, int, int) //func, int, int, int
+{
+    return 2.2;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//type alias  - tür eş isimleri
+
+typedef int Int32;
+
+//function overloading -- HAYIR
+//redeclaration
+int foo(int); // func, int,
+int foo(Int32); //func, int,
+
+int main()
+{
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//redeclaration
+int foo(int){} //foo, int
+int foo(const int){} //foo ,int
+
+int main()
+{
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//Function overloading
+//const overloading denir
+
+void foo(int *){}
+void foo(const int *){}
+
+int main()
+{
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//Function overloading
+//const overloading denir
+
+void foo(int &){}
+void foo(const int &){}
+
+int main()
+{
+}
+
+
+/***************************************************/
+/***************************************************/
+
+void foo(T *){}
+void foo(const T *){}
+
+void foo(T &){}
+void foo(const T &){}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//redeclaration
+
+void foo(int *p){}
+void foo(int *const p){} //const burada parametrenini kendisidir
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function overloading
+
+void fuu(int x, int y, int z = 10); //fuu, int, int ,int
+void fuu(int x, int y); //fuu, int, int
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//redeclaration
+
+void fuu(int x, int y = 10); //fuu, int, int
+void fuu(int x, int y); //fuu, int, int
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function overloading
+
+//void fuu(int); //fuu, int
+//void fuu(int &); //fuu, int &
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function overloading
+
+//void fuu(int &); //fuu, int &
+//void fuu(int &&); //fuu, int &&
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//function overloading
+
+//void fuu(int); //fuu, int
+//void fuu(bool); //fuu, bool
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
