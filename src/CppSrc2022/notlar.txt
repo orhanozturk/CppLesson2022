@@ -5053,6 +5053,842 @@ int main()
 /***************************************************/
 /***************************************************/
 
+Function overloading resolution 2 durum söz konusudur
+
+1- geçersiz syntax error
+
+  a- no match
+
+   void func(int);
+   void func(int, int);
+   void func(int, double);
+
+    //cagrı
+    func(nullptr); //sentaks hatası
+
+  b- ambiguity --- çift anlamlılı hatası
+
+    iki veya daha fazla secenek var fakat seçilebilirlik kireteri yok aralarında ise
+
+
+2- geçerli (hangi işlevin çağrıldığı anlaşılması)
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+//tahmin
+//long double'in char 'üstünlüğü yok
+int func(char c);
+int func(long double d);
+
+int main()
+{
+    double dval = 4.4;
+
+    func(dval);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+function overloading resolution 3 aşamada gerçekleşir
+
+
+1- aday fonksiyonlar
+
+  çağrıda kullanılan isimle aynı olmasıdır. Aynı scope'ta
+
+{
+ void func(int *)
+ void func(int, int)
+ void func(double)
+
+}
+ func(11);
+
+
+2- Uygun fonksiyonlar - Eger fonksiyon cagrısı ile fonksiyonun parametre sayısı eşit ise
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+enum Color {Red, White, Green};
+
+void func(int);
+void func(bool);
+void func(int ,int);
+void func(int *);
+void func(int, int = 1, double = 3.4);
+void func(Color);
+
+int main()
+{
+
+    //soru 1- kac tane aday fonksiyonu 6 tane
+    func(3.6);
+    //soru 2 - kac tane uygun fonksiyon var
+
+    /*
+    void func(int); //evet uygun -- double 'dan int'e donusum var
+    void func(bool); // evet uygun -- double'da bool'a donusum var
+    void func(int ,int); //uygun değil parametre sayısı eşit değil
+    void func(int *); //uygun değil, double'dan int* donusum yok
+    void func(int, int = 1, double = 3.4); //uygun evet , double'dan int'e dönüşüm var
+    void func(Color); //uygun değil, double'dan enum'a donusum yok
+    */
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+enum Color {Red, White, Green};
+
+void func(int);
+void func(bool);
+void func(int ,int);
+void func(int *);
+void func(int, int = 1, double = 3.4);
+void func(Color);
+
+int main()
+{
+
+    func(nullptr); //sadece uygun bir fonksiyon var
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+3- En az 2 tane uygun fonksiyondan bahsetmemiz lazım ki 3'cü aşama olsun
+
+   burada dilin kuralarına göre bir seçim yapacak veya yapamayıp sentaks hatası verecek -- ambiguity
+
+
+kalitesizden kaliteliye donusum
+
+1- variadic conversion
+2- user-defined conversion   --- fonksiyon cagrısı ile bir donusum yapılıyor
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+struct Data{
+
+};
+
+int main()
+{
+    Data mydata;
+
+    mydata = 10; ///sentaks hatası
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//ileride görecez detaylı olarak
+//bu user define conversion  denir
+
+struct Data{
+    Data();
+    Data(int);
+};
+
+int main()
+{
+    Data mydata;
+
+    mydata = 10;
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+3- standart convertion
+
+int --> int *  // donusum yok
+int --> double //var
+int --> char // var
+int --> long double //var
+int * --> void *//var
+void * ---> int *//yok
+enum --> int //var
+int --> enum //yok
+
+
+
+void func(double);
+void func(int);
+
+func(3.4f);
+
+
+a- exact match -- tam uyum
+
+
+-Lvalue to R value transformation
+- array to pointer conversion
+-const convertion
+-function to pointer conversion
+
+
+void func(int x);
+
+func(y);  //L value to R value transformation
+func(10);
+
+void func(const int *p);
+
+int x = 10;
+
+func(&x); //const conversion
+
+
+void func(int *p);
+
+int a[10]; { 0 };
+func(a); //func(&a[0]) // array to pointer conversion
+
+
+void func(void (*fp)(int));
+void f1(int);
+void f2(int);
+
+func(&f1);
+func(f2);  //function to pointer conversion
+
+
+
+
+b- promotion -- terfi yukseltme
+
+integral promotion
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+int main()
+{
+    char c1 = 10;
+    char c2 = 5;
+
+    short s1 = 100;
+    short s2 = 40;
+
+    c1 + c2; //int
+
+    s1 + s2; //int
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+float  --> double promotion
+
+
+
+
+c- conversion
+   yukarıda bahsi gecen konuların dışında kalan donusumler conversion dönüşümleridir
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(int);
+void func(double);
+
+int main()
+{
+   func(12); //int
+   func(1.1f); // double
+
+   unsigned int uval = 27;
+   func(uval); //sentaks hatası ambiguity
+   //unsigned int --> int conversion var
+   //unsigned int --> double conversion var
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(long double);
+void func(char);
+
+int main()
+{
+    func(2.5); //sentask hatası ambiguity
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(double);
+void func(char);
+
+int main()
+{
+    float f = 12.22;
+    func(f); //gecerli
+    //cunku double promotion
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(int);
+void func(bool);
+
+int main()
+{
+    func(10 > 5);//gecerli bool
+    //cunku promotion
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(int);
+void func(char);
+
+int main()
+{
+    func('A');//gecerli char
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(int);
+void func(int, int = 5);
+
+int main()
+{
+    func(10);//ambiguity
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+void func(int); //call by value
+void func(int &); //call by referans
+
+int main()
+{
+    int x = 10;
+
+    func(x);//ambiguity -- ne call by value ne call by reference secilebilirlik yok
+    func(20); //gecerli
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(const int *);
+void func(int *);
+
+int main()
+{
+    const int x = 10;
+    func(&x); //gecerli const int * cagrılacak.  2.cisi zaten uygun funksiyon değil
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(const int *);
+void func(int *);
+
+int main()
+{
+    int x = 10;
+    func(&x); //gecerli int * cagrılacak.
+}
+
+1-- aday
+2-- uygun mu
+3-- hangisi secilcek
+    a- exact mach
+    b- promation
+    c- conversion
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(const int &);
+void func(int &);
+
+int main()
+{
+    const int x = 10;
+
+    func(x); //gecerli const int & cagrıalcak
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(const int &);
+void func(int &);
+
+int main()
+{
+    int x = 10;
+
+    func(x); //gecerli int & cagrıalcak
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(double);
+void func(int *ptr);
+
+int main()
+{
+    int x = 0;
+    func(x); //gecerli double cagrılacak , 2. cisi uygun değil
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(double);
+void func(int *ptr);
+
+int main()
+{
+    //özel durum
+    func(0); //ambiguity
+    //normalde double cagrılması bekleniyor
+    //0 --> nullptr donusum var
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int);
+void func(int *ptr);
+
+int main()
+{
+    //özel durum
+    func(0); //int parametreli cagrılacak
+    //int parametre olan exact mach
+    //pointer convertion
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//herhangi türden void * donusumu var
+void func(void *);
+
+
+int main()
+{
+   int ival = 10;
+   func(&ival); //legal
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(bool);
+
+int main()
+{
+   int ival = 10;
+   func(&ival); //legal
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(bool);
+void func(void *);
+
+int main()
+{
+   int ival = 10;
+   func(&ival); //gecerli
+   //aslında iki fonksiyonada std convertion var
+   //ama void * kazanıyor
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int);
+void func(int *);
+
+int main()
+{
+   func(0); //gecerli
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(double);
+void func(int *);
+
+int main()
+{
+   func(0); //ambiguity
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(double);
+void func(int *);
+
+int main()
+{
+   func(nullptr); //gecerli
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(double *);
+void func(int *);
+
+int main()
+{
+   func(nullptr); //sentaks hatası --kafası karısır
+}
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int &r);
+void func(int &&r);
+
+int main()
+{
+   int x = 10;
+   func(x);// ilki cagrılır L value reference
+   //R value ile cagırsaydık alttaki cagrılırdı
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Çok parametreli overloading için
+
+Bir fonksiyonun bir parametrede ustunluk saglmaası gerekiyor ve diger parametrelerde
+daha kötü olmayacak aynı olabilir veya üstün olabilir
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int, double, long);   // h  m  m
+void func(double, int, int);    // m  m  m
+void func(float, float, float); // m  m  m
+
+int main()
+{
+    func(12, 6u, 4.5); //1. cisi cagrılır
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int, double, long);   // h  m  m
+void func(double, int, int);    // m  h  m
+void func(float, float, float); // m  m  m
+
+int main()
+{
+    func(12, 15, 4.5); //ambiguity
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int, double, long);   // m  m  m
+void func(double, int, int);    // h  m  m
+void func(float, float, float); // m  m  m
+
+int main()
+{
+    func(3.1, 6u, 5.5);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+void func(int, double, long);   // m  m  m
+void func(double, int, int);    // m  h  m
+void func(float, float, float); // m  m  m
+
+int main()
+{
+    func(12u, 14, 5.5); //2.cisi
+}
+
+
+/***************************************************/
+/***************************************************/
+
+enum türleri / class ----> C++ daki enumdan bahsedeceğiz
+extern "C" bildirimi
+
+
+sınıf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
