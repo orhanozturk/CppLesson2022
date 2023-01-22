@@ -3,13 +3,29 @@
 
 using namespace std;
 
-void func(int, double, long);   // m  m  m
-void func(double, int, int);    // m  h  m
-void func(float, float, float); // m  m  m
+/*
+extern "C" {
+  int func1(int, int);
+  int func2(int, int);
+  int func3(int, int);
+}
+*/
+
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+    int func1(int, int);
+    int func2(int, int);
+    int func3(int, int);
+#ifdef __cplusplus
+    }
+#endif
+
 
 int main()
 {
-    func(12u, 14, 5.5); //2.cisi
+
 }
 
 

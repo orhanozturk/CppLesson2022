@@ -5864,16 +5864,276 @@ int main()
 /***************************************************/
 /***************************************************/
 
-enum türleri / class ----> C++ daki enumdan bahsedeceğiz
-extern "C" bildirimi
+enum  --- numaralandırma
 
 
-sınıf
+C deki enum int'ti arkasındaki tür
+underlying type --> int denir
+
+C++ da underlying type derleyiciye baglı ve numaralandırmalara verdiğimiz
+degerlerin ne olduguna baglı olarak sizeof degişir
+
+
+
+enum Color{White, Black, Gray, Gree};
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+enum Color{White, Gray, Green, Balck};
+
+//1. kötü özelliği tür dönüşümler,
+
+int main()
+{
+    Color myColor = Gray;
+
+    int ival = 5;
+
+    myColor = ival; //sentask hatası
+    ival = myColor; //gecerli
+
+    //böyle olması birçok kodlama hatası tetikliyor
+    //yani problem enumlardan int'e implicit type convertion olması
+
+}
+
+
+/***************************************************/
+/***************************************************/
 
 
 
 
+#include <iostream>
+#include <cstdlib>
 
+using namespace std;
+
+enum Color{White, Gray, Green, Balck};
+
+//2. kötü özellik numaralandırma türünün
+//underlyen türü derleyicieye baglı oldugu için
+//numaralandırma türlerin forward declaration yapılamıyordu
+//incomplte type / complete type -- eksik tür -- tamamlanmı tür
+
+//yapılar numaralandırmalar birlikler
+//complete type / incomplete type olabilir C de
+
+//derleyici tanımı görmesi complete type
+//derleyici tür bilgisi oldgunu biliyor
+//ama tanımı göremiyorsa incomplete type dir
+
+//complete type
+struct Data{
+    int x, y, z;
+};
+
+//incomplete type
+struct Data1;
+
+int main()
+{
+    //incomplete type
+    //tanımlama yapamayız cunku ne kadar yer alacagını kestiremeyiz
+    //Data1 data1; //sentaks hatası
+    Data data; //gecerli
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+enum Color{Whıte, Black, Gray, Green};
+
+//3. kötü özellik numaralandırma türünün
+
+//screen.h
+//#include "screen.h"
+enum ScreenColor {Magenta, Gray, Blue, Red};
+
+//#include "traffic.h"
+enum TrafficLight {Yellow, Green, Red};
+
+//Aynı scope taki enum varklıklara aynı scope ta olamaz
+//Gray - Red -- Green tekinde olması gerek
+
+//1. çözüm isimlerin farklı olması
+//2.çözüm class elemanı olarak yazmak
+
+
+class Screen{
+    enum ScreenColor {Magenta, Gray, Blue, Red};
+};
+
+//3. çözüm isim alnı içine almak  --- namespace
+
+int main()
+{
+
+
+}
+
+
+/***************************************************/
+/***************************************************/
+
+modern C++ da yenilikler
+
+
+1. underlying type programcı secebilir
+
+enum Color : int {Red, White, Black};
+enum Color : int;
+
+2. enum Class'lar eklendi daha önemli bir ekelenti
+
+-bu sayede diger türlere otomatik tür donusumu yok
+-numaralandırma sabitlerinin scope'u degisti
+-isim cakısmasından kurtulmus olduk
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+enum class TrafficLight : int {Black, White, Yellow};
+enum class Color : int {Black, White, Yellow};
+
+int main()
+{
+   Color myColor = Color::Black;
+   int ival = myColor; //sentaks hatası artık
+
+   //ben bilerek yapmak istiyorum bu atamayı
+   unsigned int val = static_cast<unsigned int>(myColor);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+enum class Color : unsigned long {Black, White, Yellow};
+
+int main()
+{
+    const char *const p[] = {"Black", "White", "Yellow"};
+
+    p[Color::Black]; //int e donusum yok -- yani otomatik donusum yok
+
+
+    cout << p[static_cast<int>(Color::White)] << "\n"; //böyle yapabiliriz
+}
+
+
+/***************************************************/
+/***************************************************/
+
+
+Extern C Bildirimi
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int func(int x, int y);
+
+int main()
+{
+  //linker aşamasında çözümleyemez
+  auto a = func(2, 6);
+}
+
+
+/***************************************************/
+/***************************************************/
+
+Bildirim
+
+extern "C" int func(int, int);
+
+func aslında external bir c fonksiyonu oldugu anlaşılıyor
+sen bunu obje koda yazdıgında C tarzı yaz
+
+
+extern "C" int func1(int, int);
+extern "C" int func2(int, int);
+extern "C" int func3(int, int);
+extern "C" int func4(int, int);
+
+böyle yazmaktansa şöyle
+
+extern "C" {
+  int func1(int, int);
+  int func2(int, int);
+  int func3(int, int);
+}
+
+------------------------------------------
+
+predefined symbolic constants
+
+
+neden buna ihtiyac var
+
+C ve C++ için tek bir kutuphane kullanmak
+
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+/*
+extern "C" {
+  int func1(int, int);
+  int func2(int, int);
+  int func3(int, int);
+}
+*/
+
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+    int func1(int, int);
+    int func2(int, int);
+    int func3(int, int);
+#ifdef __cplusplus
+    }
+#endif
+
+
+int main()
+{
+
+}
+
+
+/***************************************************/
+/***************************************************/
 
 
 
