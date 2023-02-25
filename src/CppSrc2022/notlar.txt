@@ -6135,95 +6135,811 @@ int main()
 /***************************************************/
 /***************************************************/
 
+10.Ders 25.02.2023 - Cumartesi
 
+Classes --- Sınıflar
 
+data abstraction  -- veri soyutlama
+problem domainde varlıklar var. Programlama dilinde yazılımsal olarak varlıkları temsil etmektir.
 
+C++ da sağlayan araç class'lardır
 
 
+Sınıflar user defined typedır
+C de struct'ra yapı denir --> C++ da structlar aslında sınıftır
 
+class definition -- tanım
+class declaration -- bildirim
 
 
 
 
+#include <iostream>
 
+using namespace std;
 
+//class tag
+class Myclass{
 
+};
 
+//struct ile de sınıf olusturulur
+struct Mystruct{ //bunu ileride konuşacagız
 
+};
 
 
 
+int main()
+{
 
+}
 
 
+/***************************************************/
+/***************************************************/
 
 
+Boş oluşturulan class'lara -- empty class denir
 
 
+class Myclass{
 
+};
 
 
 
 
+//class tag
+class Myclass{
+    //bildirimler
+    //member lar
+};
 
 
+class member 3 kategoride olabilir
 
+1- data members  -- veri ögeleri
+2- member functions -- üye fonksiyonları
+3- member type -- type members -- nested types
 
 
 
+1- data members  -- veri ögeleri
+ a- non-static data member
+ b- static data members
 
+2- member functions -- üye fonksiyonları
+ a- non-static member functions
+  1- non-const member dunctions
+  2- const member functions
+ b- static member functions
 
+3- member type -- type members -- nested types
 
+#include <iostream>
 
+using namespace std;
 
+class Myclass{
+    int x, y; //non static data member
+    static double dval; // static data member
 
+    void func(); //non static member dunction
+    static int foo(); //static member dunction
 
+    typedef int Word;
+    enum class Color {Red, Green, White}; //member type
 
+};
 
 
+int main()
+{
 
+}
 
+/***************************************************/
+/***************************************************/
 
+Scope -- kapsam
 
 
+file scope
+block scope
+function protatype scope
+function scope
+class scope
 
 
+class scope
 
+class Myclass{
+  int x, y;
+  double dval;
+  //
+  //
+};
 
 
+-------------------------------
 
+name lookup   --> isim arama
 
+a- sentaks hatası
+   -derleyici aradığı ismi bulamaz ise
+   -birden fazla bildirim var ama derleyici hangisi odlugunu kestiremiyor -- ambiguity hatası
 
+b- derleyici ismin neyin ismi oldgunu anlar
 
 
 
+nesne erşim kontrol menkanizması şu adımlardan geçer
 
+name lookup
+context-control
+access control (erişim kontrolu)
 
 
+hangi durumlarda bir isim class scope'ta aranır
 
+a- isim nokta operatörünü sağında kalmış ise (member selection - dot operator)
 
+b- isim ok operatörünü sağında kalmış ise (member selection - arrow operator)
 
+c- isim :: çözünürlük operatörünün sağında kalmışsa (member selection -- scope resolution operator)
 
 
+A class nesnesi olsun
 
+A.y
+A->x
+A::z
 
+----------------------------------------------------------
 
 
+genelde sınıfların baslık dosyasında olur  .h veya .hpp dosyası
 
+cok nadir olarakta .cpp dosyasında tanımı olabilir
 
+yada local yerlerde de olabilir
 
+int main()
+{
+    //local class
+    class Myclass{
 
+    };
+}
 
+----------------------------------------------------------
 
+Sınıflarda erişim kontrolu (access specifier) 3 gruba ayrılır
 
+public member
+private member
+protected member
 
 
 
+class Myclass{
+public:
+ //burası publix memberler
 
+private:
+ //burası private member
 
+protected:
+ //burası protected memberlar
 
 
+public:
+//burası publix memberler
 
+
+};
+
+-------------------------
+
+//hiç bir alana ayırmaz isek
+//sınıfın içinde tanımlanan herşey private kabul edilir
+
+class Myclass{
+
+};
+
+
+//bir alan blirtilmezse struct'ta public member olur hepsi
+struct Myclass{
+
+}
+
+
+Programcı sınıfların alnalarını belirler iken belirli bir sırada yapmak zorunda değil
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass{
+    int x;  //burası private
+    void foo();
+
+public:
+    int y;
+};
+
+int main()
+{
+    Myclass my;
+    my.y;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+biizm uyacagımız yapı bu şekilde
+
+public interface
+   public kısımda bulunan isimlerin erişimi herkese açıktır
+
+protected interface
+   protected inharetince (miras - kalıtım) oldugu yerlerde sınıfın memberlrina erişim izni vardır
+    eğer kalıtım yok ise private özelliği sahip olunur
+
+private interface
+   clientların kullnımına kapalı isimlerdir. sadece sınıf kendisi kullanabilir bu isimleri
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass{
+public:
+    int x;  //burası private
+    void foo();
+
+private:
+    int y;
+};
+
+int main()
+{
+    Myclass myClass;
+    myClass.x;
+    myClass.foo();
+    myClass.y; //erişim yoktur sentaks hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+
+mülakat sorusu
+
+//public ve private scope değildir
+//aslında burada tek bir scope vardır
+//sentsk hatsı olur isim çakışması
+
+class Myclass{
+ public:
+   int mx;
+
+ private:
+   int mx();
+
+};
+
+/***************************************************/
+/***************************************************/
+
+
+class veri elemanları
+
+sınıfa ne kadar non static veri elemanı koyarsak sizeof o kadar artar
+herhangi bildirim yapılmaz ise non static veri elemanıdır eklenen veri elemanı
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+class Myclass{
+   int mx;
+};
+
+int main()
+{
+    cout << "sizeof(Myclass) : " << sizeof (Myclass) << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+class Myclass{
+   int mx, my;
+   double dval;
+};
+
+int main()
+{
+    cout << "sizeof(Myclass) : " << sizeof (Myclass) << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+member functions
+
+class Myclass{
+public:
+    void func(int);
+};
+
+sınıfın dısında tanımlanan fonksiyonlara
+
+global function
+free function
+stand-alone function
+
+
+/***************************************************/
+/***************************************************/
+
+Sınıfın üye fonksyonları
+fonksiyon özelliklerine sahip fakat sadece class scope da yer laması lazım
+
+
+
+
+//Erişim yontemlerimiz
+
+#include <iostream>
+
+using namespace std;
+
+
+class Myclass{
+public:
+    //non static member function
+    void func(int);
+};
+
+int main()
+{
+    Myclass my1;
+    my1.func(2);
+
+
+    Myclass *my2 = new Myclass();
+    my2->func(4);
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+class Myclass{
+public:
+    //non static member function
+    void func(int);
+    //client'lar erişebilir
+
+private:
+    int x, y, z;
+    //client erişemez
+};
+
+int main()
+{
+    Myclass my1;
+    my1.func(2);
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+class Data{
+private:
+    int x, y, z;
+
+public:
+    void func();
+};
+
+
+int main()
+{
+    Data mydata;
+    Data *p = &mydata;
+
+    //her iki durumda da mydata'nın func'nı cagırmıs olduk
+    mydata.func();
+    p->func();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+class Data{
+private:
+    int x, y, z;
+
+public:
+    void func();
+};
+
+
+int main()
+{
+    //namelookup adımı gerçekleşir
+
+    Data::func();
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+class Data{
+private:
+    int x, y, z;
+
+public:
+    void func();
+};
+
+//bu isimde fonksiyon bildirebilirmiyim
+//scope'lar farklı oldugu için bildirebiliriz
+
+//peki bunlarda function overloding mi?
+//Hayır değil aynı scope ta olması lazım
+
+void func(int);
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+class Data{
+private:
+    int x, y, z;
+
+public:
+    //sınıfın üye fonksiyonlarını overload edebiliriz
+    void func();
+    void func(int);
+    void func(int, int);
+    void func(double);
+};
+
+
+int main()
+{
+   Data mydata;
+   mydata.func(3.4);
+   mydata.func(2, 5);
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+class Data{
+private:
+  void func(int);
+
+public:
+  void func(double);
+};
+
+
+
+#include <iostream>
+
+using namespace std;
+
+class Data{
+private:
+  void func(int);
+
+public:
+  void func(double);
+};
+
+
+int main()
+{
+    Data mydata;
+    mydata.func(2.3); //gerceli
+    mydata.func(5); //erişim yok
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+geçerli değil
+
+class Data{
+public:
+  void func(double);
+  void func(double);
+
+};
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//sınıf üye fonksiyonları storage ile alakası olmaz
+
+class Data{
+private:
+    //int a, b;
+private:
+    void func(int);
+
+private:
+    void func(double);
+
+};
+
+
+int main()
+{
+   cout << "sizeof : " << sizeof (Data) << "\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include "myclass.hpp"
+
+using namespace std;
+
+
+int main()
+{
+    Myclass m;
+
+    m.foo(2);
+    m.func(2, 5);
+
+    fuu(m, 10);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//class resulotion -- isim arama
+
+//.hpp
+class Myclass{
+    int mx, my;
+
+public:
+    void func();
+    void foo();
+};
+
+//.cpp
+void Myclass::func()
+{
+    if(1)
+    {
+        if(1)
+        {
+            //isim kullanmı olalım
+            //ilk önce üye fonksiyon içinde aranır
+            //bulamazsa class scope ta arar
+            //bulamazsa globalda aranıyor
+        }
+    }
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//name resulotion
+
+int x = 20;
+
+int main()
+{
+    int x = 10;
+
+    //C de bu :: operatoru yok. C++ da var ve global isme erişmemizi sağlar
+    cout << "x : " << x << "\n";
+    cout << "::x : " << ::x << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+    void func();
+    void foo();
+};
+
+int mx = 123;
+
+//.cpp
+void Myclass::func()
+{
+    int mx = 10;
+
+    Myclass::mx == 12; //class mx
+
+    mx = 20; //yerel mx
+
+    ++::mx; //global mx
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+    void func();
+    void foo();
+};
+
+
+//.cpp
+void Myclass::func()
+{
+    mx = 12;
+}
+
+int main()
+{
+    Myclass m1, m2;
+
+    //m1 adresi aslında gizliden fonksiyona gönderiliyor
+    m1.func(); //mx m1'in dir
+    //m2 adresi aslında gizliden fonksiyona gönderiliyor
+    m2.func(); //mx m2'in dir
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+    void func();
+    void foo(int);
+};
+
+void foo()
+{
+
+}
+
+
+//.cpp
+void Myclass::func()
+{
+    //gecerlimi? gecerli ise hangisi cagrılır
+    //class scope da isim arandı bulundu
+    foo(); //sentask hatası parametre eşleçmediğiiçin
+
+
+    //global foo cagırmak için çözünürlük operatorunu kullanmamız gerekli
+    ::foo();
+}
+
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
 
 
 

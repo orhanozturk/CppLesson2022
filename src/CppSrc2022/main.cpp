@@ -1,26 +1,34 @@
 #include <iostream>
-#include <cstdlib>
 
 using namespace std;
 
-/*
-extern "C" {
-  int func1(int, int);
-  int func2(int, int);
-  int func3(int, int);
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+    void func();
+    void foo(int);
+};
+
+void foo()
+{
+
 }
-*/
 
 
-#ifdef __cplusplus
-    extern "C" {
-#endif
-    int func1(int, int);
-    int func2(int, int);
-    int func3(int, int);
-#ifdef __cplusplus
-    }
-#endif
+//.cpp
+void Myclass::func()
+{
+    //gecerlimi? gecerli ise hangisi cagrılır
+    //class scope da isim arandı bulundu
+    foo(); //sentask hatası parametre eşleçmediğiiçin
+
+
+    //global foo cagırmak için çözünürlük operatorunu kullanmamız gerekli
+    ::foo();
+}
+
+
 
 
 int main()
@@ -28,10 +36,6 @@ int main()
 
 }
 
-
 /***************************************************/
 /***************************************************/
-
-
-
 
