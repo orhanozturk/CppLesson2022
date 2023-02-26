@@ -2,37 +2,38 @@
 
 using namespace std;
 
+//bir sınfın defaulr ctor olmak zorunda değil
+//Ama dtor olmak zorunda
+
 //.hpp
 class Myclass{
-    int mx, my;
 public:
-    void func();
-    void foo(int);
+    Myclass(); //default ctor
+    ~Myclass(); //dtor
 };
 
-void foo()
-{
-
-}
+//gloval nesneler
+//main baslamadan önce hayata gelir
 
 
 //.cpp
-void Myclass::func()
-{
-    //gecerlimi? gecerli ise hangisi cagrılır
-    //class scope da isim arandı bulundu
-    foo(); //sentask hatası parametre eşleçmediğiiçin
-
-
-    //global foo cagırmak için çözünürlük operatorunu kullanmamız gerekli
-    ::foo();
+Myclass::Myclass(){
+    cout << "Myclass default ctor ...  this : " << this << "\n";
 }
 
-
-
+Myclass::~Myclass(){
+    cout << "Myclass  dtor ...  this : " << this << "\n";
+}
 
 int main()
-{
+{ 
+    cout << "main basladi\n";
+
+    Myclass m;
+
+    cout << "&m : " << &m << "\n";
+
+    cout << "main sonlaniyor\n";
 
 }
 

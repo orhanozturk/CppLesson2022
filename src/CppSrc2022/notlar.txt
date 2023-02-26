@@ -6944,6 +6944,1159 @@ int main()
 
 
 
+#include <iostream>
+
+using namespace std;
+
+struct Data{
+    int mx, my;
+};
+
+//bu fonksiyonlar ne anlam ifade eder
+
+//ben alırım ve setter gorevi gorurum
+void foo(struct Data *p);
+
+//ben alırım ve getter gorevi gorurum
+void func(const struct Data *p);
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass{
+    int mx, my;
+public:
+    void func();
+    void foo() const;
+    //foo ben sınıfın nesnesşnş değiştiremiyeceğim
+};
+
+void Myclass::foo() const{
+    mx = 14;
+}
+
+void Myclass::func(){
+    mx = 15;
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+    void func();
+    void foo() const;
+    //foo ben sınıfın nesnesşnş değiştiremiyeceğim
+};
+
+//.cpp
+void Myclass::foo()const{ //tanımında const keywordu olmalı yoks eşleşmez fonksiyon
+    //mx = 14;
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+
+    //ikisi ayrı fonksiyon
+    //const overloding
+    void foo();
+    void foo() const;
+};
+
+//.cpp
+void Myclass::foo()const{
+    mx = 14;
+}
+
+void Myclass::foo(){
+    mx = 15;
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+
+    void func();
+    void foo() const;
+};
+
+//.cpp
+void Myclass::foo()const{
+    mx = 14;
+}
+
+
+//getter
+void Myclass::foo(const Myclass *p)const{
+
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+const üye fonkisyonlar sınıfın nonstatic data type larını değiştiremez
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+
+    void func();
+    void foo() const;
+};
+
+//.cpp
+void Myclass::foo()const{
+    Myclass a;
+    a.mx = 15;
+
+    mx = 13;//gecersiz bu nesne ilgilendirilir
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+    int mx, my;
+public:
+
+    void func();
+    void foo() const;
+};
+
+
+int main()
+{
+    //const olmayan uye foknsyon cagrılamaz const nesne ile
+    Myclass mx;
+    const Myclass my = mx;
+
+    my.foo();
+    mx.foo();
+    mx.func();
+    my.func(); //sentak hatası
+
+    //Neden
+    /*
+     * const T*   --> T* donusum yok
+     * T* ----> const T* donusum var
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    void func();
+    void foo() const;
+    void fuu() const;
+
+private:
+    int mx, my;
+};
+
+
+//.cpp
+
+void Myclass::func(){
+    foo();
+    //T*  --> const T*
+}
+
+void Myclass::foo() const{
+    //func(); //gecersiz
+    fuu(); //gecerli
+}
+
+void Myclass::fuu() const{
+    foo();
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+Uye fonksiyonlarda const overloading
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    void func();
+    void func() const;
+
+private:
+    int mx, my;
+};
+
+
+//.cpp
+void Myclass::func(){
+    cout << "Myclass::func()\n";
+}
+
+void Myclass::func() const{
+    cout << "Myclass::func() const\n";
+}
+
+
+int main()
+{
+    Myclass mc;
+    const Myclass cmx = mc;
+
+
+    cmx.func();//const olan uye fonksiyon cagrılacak
+
+    mc.func(); //const olmayan nesne için const olamyan üye fonksiyon cagrılacak
+
+}
+
+/***************************************************/
+/***************************************************/
+
+This anahtar sözcüğü --- this pointer
+
+this anahtar sözcüğü yanlızca sınıfların non-static
+üye fonksiyonları içinde kullanılabilir
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    void func();
+    void foo();
+
+private:
+    int mx, my;
+};
+
+
+//.cpp
+void Myclass::func(){
+    this; //bu üye fonksiyon hangi nesne için cagrılmıssa o nesnenin adresidir
+    *this;//o nesnenin kendisi
+    //diğer dillerde this den diğinde nesnenin kendisi
+
+    mx = 10;
+    this->mx = 20; //bu sekildede yazabiliriz
+
+
+    //iki cagrıda aynı
+    //derleyici sizin için this-> halleder
+    foo();
+    this->foo();
+
+}
+
+
+int main()
+{
+    Myclass mc;
+    mc.func();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    void func();
+    void foo();
+
+private:
+    int mx, my;
+};
+
+
+//.cpp
+void Myclass::func(){
+    int mx = 10;
+
+    mx = 20;//yerel değişken
+    this->mx = 30; //class scope taki mx tir
+
+    Myclass::mx;//class scope taki mx tir
+
+    (*this).mx = 55;
+
+}
+
+
+int main()
+{
+    Myclass mc;
+    mc.func();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+aslın arka tarafta böyle bir parametre varmış gibi düşünebiliriz
+fakat böyle bir parametre yok
+
+void Myclass::func(Myclass *this){
+
+}
+
+Myclass mc;
+mc.func();
+
+
+/***************************************************/
+/***************************************************/
+
+
+class Myclass{
+public:
+    void func();
+    void foo();
+
+private:
+    int mx, my;
+};
+
+
+//.cpp
+void Myclass::func(){
+
+    vcat(this); //R value expression
+    vcat(*this); //L value expression
+
+}
+
+
+int main()
+{
+    Myclass mc;
+    mc.func();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class Myclass{
+public:
+    void func();
+    void foo();
+
+private:
+    int mx, my;
+};
+
+
+//.cpp
+void Myclass::func(){
+    cout << "Myclass'in func islevi\n";
+    cout << "this : " << this << "\n";
+
+    foo();
+}
+
+void Myclass::foo(){
+    cout << "Myclass'in foo islevi\n";
+    cout << "this : " << this << "\n";
+}
+
+int main()
+{
+    Myclass mc;
+    cout <<"&mc : " << &mc << "\n";
+
+    mc.func();
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class Myclass{
+public:
+    void func();
+    void foo();
+
+private:
+    int mx, my;
+};
+
+
+void gf(Myclass *p){
+    cout << "global gf cagrildi p = " << p << "\n";
+}
+
+
+void gf1(Myclass &p){
+    cout << "global gf1 cagrildi p = " << &p << "\n";
+}
+
+//.cpp
+void Myclass::func(){
+    cout << "Myclass'in func islevi\n";
+    cout << "this : " << this << "\n";
+
+    gf(this);
+    gf1(*this);
+}
+
+
+
+int main()
+{
+    Myclass mc;
+    cout <<"&mc : " << &mc << "\n";
+
+    mc.func();
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class Myclass{
+public:
+    //*this
+    Myclass &f1();
+    Myclass &f2();
+    Myclass &f3();
+    Myclass &f4();
+
+private:
+    int mx, my;
+};
+
+
+Myclass & Myclass::f1(){
+    return *this;
+}
+
+
+
+int main()
+{
+    Myclass m;
+
+    m.f1().f2().f3().f4().f1().f2();
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int x = 1;
+    double d = 3.5;
+    bool flag = false;
+
+    cout << x << d << flag << "\n";
+    //nasıl oluyorda böyle yazabiliyoruz
+    //operator overloading sayesinde gercekleşiyor
+    //ileride gorecez
+
+    //operator overloading olmasaydı
+    //*this sayesinde bu alttaki yapı ile yapardık
+    cout.operator<<(x).operator<<(d).operator<<(flag);
+
+    cout << endl;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+
+class Myclass{
+public:
+    void func();
+    void foo()const;
+
+private:
+    int mx, my;
+};
+
+Myclass g;
+
+void Myclass::func(){
+    //this;//r value
+    //*this; // l value
+
+    this = &g; //geccersiz
+    *this = g; //gecerli
+}
+
+void Myclass::foo() const{
+    *this = g; //gecersiz const pointer oldugu için
+    this->mx = 20; //gecersiz
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass *f1();
+    Myclass &f2();
+
+    Myclass *f3()const;
+    Myclass &f4()const;
+
+    const Myclass *f5()const;
+    const Myclass &f6()const;
+
+private:
+    int mx, my;
+};
+
+Myclass *Myclass::f1(){
+    return this;
+}
+
+Myclass &Myclass::f2(){
+    return *this;
+}
+
+Myclass *Myclass::f3() const{
+    return this; //gecersiz
+
+   // const T*  ---> T*  convert edemeyiz
+}
+
+Myclass &Myclass::f4()const{
+    return *this;
+    //const T* --> T* convert edemeyiz
+}
+
+const Myclass *Myclass::f5() const{
+    return this;
+    //const T*  --> const T * problem yok
+}
+
+const Myclass &Myclass::f6() const{
+    return *this;
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    void func();
+
+private:
+    int mx, my;
+};
+
+
+Myclass gm;
+
+void Myclass::func(){
+    this = &gm; // sentaks hataası
+
+    //this R value expr dir
+    //this pointer kendisi cont dur bu yüzden gecersiz
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+inline function
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int sum_square(int x, int y)
+{
+    return x* x + y*y;
+}
+
+int main()
+{
+    int a = 10, b = 20;
+    int c = sum_square(a, b);
+
+    //derleyicinin optimizasyonu
+    int z = a*a + b*b;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+ODR --- one defination rul
+
+
+varlgıınn tanımı tek olması
+
+iki aynı kaynak kod farklı kaynak dosylarda olur ise
+compile time da anlayamaz derleyici
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//orhn.hpp
+void func()
+{
+
+}
+
+//ozturk.hpp
+void func()
+{
+
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    int func(int);
+    //burada da tanımı inline yapılabilir
+
+};
+
+inline int Myclass::func(int x)
+{
+    return x;
+}
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    int func(int) //buda inline
+    {
+
+    }
+
+
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    int func(int) //buda inline
+    {
+
+    }
+};
+
+//implicit inline olarak gecer
+constexpr int func(int x)
+{
+    return x;
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+Peki neler inline olarak tanımlanır
+
+sınıfın
+
+   non static member function
+     const
+     non const
+
+   static member function
+
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    static int func(int) // inline func
+    {
+
+    }
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    friend int func(int) // inline oalrak firend kullanabiliriz
+    {
+
+    }
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+constructor / destructor
+
+special member functions
+
+bir sınıf turunden nesneyi hayata getiren uye fonksiyona constructor denir
+
+sınıf nesnsinin hayatını sonlandıran uye fonksiyona destructor denir
+
+
+constructor ismi sınıfın ismi ile aynı olmak zorunda
+constructorların geri donus diye bir kavramı yoktur
+constructor uye foknsyon olmaz
+constructor global yada sınıfın static uye fonksiyonu olamaz
+constructor overload edilebilir
+constructor sınfın public ve private fonksiyonu olabilir
+birden cok ctor olabilir
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass(); //ctor
+
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+class Myclass{
+public:
+    Myclass(); //ctor
+    Myclass(int);
+    Myclass(double);
+    Myclass(int, int);
+
+};
+
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+private:
+    //Myclass();
+
+public:
+    Myclass(); //ctor
+
+};
+
+int main()
+{
+    Myclass m;
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+private:
+    //Myclass();
+
+public:
+    Myclass(); //ctor
+
+};
+
+int main()
+{
+    Myclass m;
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass(); //ctor
+    void func();
+};
+
+int main()
+{
+    Myclass m;
+    m.func();
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass()const; //ctor const fonksiyon olmaz
+
+};
+
+int main()
+{
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    static Myclass(); //ctor static fonksiyon olmaz
+
+};
+
+int main()
+{
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass() //ctor inline fonksiyon olur
+    {
+
+    }
+};
+
+//.cpp
+//yada inline olmadan cpp dosyasında tnaımlayabiliriz
+Myclass::Myclass()
+{
+
+}
+
+int main()
+{
+}
+
+/***************************************************/
+/***************************************************/
+
+default constructor
+parametre degişkenine sahip değildir
+default constructor ==== varsayilan kurucu işlev kabul edilir
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass(); //defualt ctor
+    Myclass(int x = 0); //default ctor değil cunku parametreye sahip
+
+};
+
+
+int main()
+{
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+
+//eger sınfının default ctor yazmaz isek derleyici bizim için default ctor yazar
+class Myclass{
+public:
+
+};
+
+int main()
+{
+}
+
+/***************************************************/
+/***************************************************/
+
+special member functions  --- sıfıın özel üye fonksiyonları
+
+
+derleyici bizim için special member duncitons kodunu yazma işlemdiri
+
+
+6 tane özel üye fonksiyonumuz var
+
+default constructor  -- varsayılan kurucu işlev
+copy constructor   -- kopyalayan kurucu işlev
+move constructor  -- tasıyan kurucu işlev // C++11
+copy assignment function  --- kopyalana atama işlevi
+move assignment function -- tasıyan atama işlevi // C++11
+destructor -- sonlandırıcı işlev
 
 
 
@@ -6951,18 +8104,218 @@ int main()
 
 
 
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+
+//eger sınfının default ctor yazmaz isek derleyici bizim için default ctor yazar
+class Myclass{
+public:
+    //Myclass();
+};
+
+int main()
+{
+    Myclass m;
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+
+//eger sınfının default ctor yazmaz isek derleyici bizim için default ctor yazar
+class Myclass{
+public:
+    //Myclass();
+    Myclass(int);
+
+};
+
+int main()
+{
+    //parametreli ctor tanımladıgımız için default ctor yoktur
+    //bu yuzden sentask hatası
+    Myclass m;
+}
+
+/***************************************************/
+/***************************************************/
+
+destructor
+
+sınıf nesnesinin hayatını bitiren fonksiyon
+run time da destructor cagrılması ile o nesnenin hayatı bitmiş kabul edilir
+
+
+sınıfın non static uye fonksiyonu
+ismi sınıfın ismile aynı olmalı
+tilda karateri kullanılır  --->  ~Myclass()
+geri donus degeri kavramı yoktur
+destructor overload edilemez
+destructor parametresi yoktur
+destructorconst olamaz
+destructor static ve global olamaz
 
 
 
 
+#include <iostream>
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass(); //default ctor
+    ~Myclass(); //dtor
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
 
 
+#include <iostream>
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass(); //default ctor
+    ~Myclass(); //dtor
+};
+
+int main()
+{
+
+    Myclass *ptr;
+
+    ptr->~Myclass();
+//dtro istisnayi cagırma durumudur
+//bunun dısında cagırmayacagız
+//yoksa sentask hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//bir sınfın defaulr ctor olmak zorunda değil
+//Ama dtor olmak zorunda
+
+class Myclass{
+public:
+    //Myclass();
+    Myclass(int, int);
+
+    ~Myclass(); //dtor
+};
+
+int main()
+{
+    Myclass m1;
+    Myclass m(2, 3);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//bir sınfın defaulr ctor olmak zorunda değil
+//Ama dtor olmak zorunda
+
+//.hpp
+class Myclass{
+public:
+    Myclass(); //default ctor
+    ~Myclass(); //dtor
+};
+
+//gloval nesneler
+//main baslamadan önce hayata gelir
+Myclass m;
+
+//.cpp
+Myclass::Myclass(){
+    cout << "Myclass default ctor ...  this : " << this << "\n";
+}
+
+Myclass::~Myclass(){
+    cout << "Myclass  dtor ...  this : " << this << "\n";
+}
+
+int main()
+{
+    cout << "main basladi\n";
+
+    cout << "&m : " << &m << "\n";
+
+    cout << "main sonlaniyor\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//bir sınfın defaulr ctor olmak zorunda değil
+//Ama dtor olmak zorunda
+
+//.hpp
+class Myclass{
+public:
+    Myclass(); //default ctor
+    ~Myclass(); //dtor
+};
+
+//gloval nesneler
+//main baslamadan önce hayata gelir
 
 
+//.cpp
+Myclass::Myclass(){
+    cout << "Myclass default ctor ...  this : " << this << "\n";
+}
 
+Myclass::~Myclass(){
+    cout << "Myclass  dtor ...  this : " << this << "\n";
+}
 
+int main()
+{
+    cout << "main basladi\n";
 
+    Myclass m;
 
+    cout << "&m : " << &m << "\n";
+
+    cout << "main sonlaniyor\n";
+
+}
+
+/***************************************************/
+/***************************************************/
 
 
 
