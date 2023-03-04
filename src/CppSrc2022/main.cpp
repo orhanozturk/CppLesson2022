@@ -2,39 +2,27 @@
 
 using namespace std;
 
-//bir sınfın defaulr ctor olmak zorunda değil
-//Ama dtor olmak zorunda
 
 //.hpp
-class Myclass{
+
+class Member{
 public:
-    Myclass(); //default ctor
-    ~Myclass(); //dtor
+    Member(int);
 };
 
-//gloval nesneler
-//main baslamadan önce hayata gelir
+class Myclass{
+private:
+    Member mx;
 
+public:
+
+};
 
 //.cpp
-Myclass::Myclass(){
-    cout << "Myclass default ctor ...  this : " << this << "\n";
-}
-
-Myclass::~Myclass(){
-    cout << "Myclass  dtor ...  this : " << this << "\n";
-}
 
 int main()
 { 
-    cout << "main basladi\n";
-
-    Myclass m;
-
-    cout << "&m : " << &m << "\n";
-
-    cout << "main sonlaniyor\n";
-
+    Myclass m; //imlicity deleted
 }
 
 /***************************************************/
