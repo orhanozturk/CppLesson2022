@@ -9874,9 +9874,769 @@ int main()
 /***************************************************/
 /***************************************************/
 
-3 özel üye fonksiyon
-
+3. özel üye fonksiyon
 
 copy constructor -- kopyalayan kurucu işlev
+
+değerini bir başka nesneden kopyalamak üzere hayata geliyor
+
+
+cc veya copy ctor
+
+x ve y aynı sınıf turunden nesne
+
+T x = y;
+
+copy ctor durumları
+
+Myclass m2 = m1;
+Myclass m2(m1);
+Myclass m2{m1};
+
+
+
+void func(Myclass m)
+
+Myclass mx;
+
+func(mx); //m nesnesi hayata gelirken mx nesnesi için copy ctor cagırarak hayata gelecektir
+
+
+----
+
+Myclass g;
+
+Myclass func()
+{
+  return g;
+}
+
+
+geri donute temprory yani geçici nesne olusturması lazım
+returnde ki degeri kendisine alması için bunu copy ctor ile saglar
+
+
+----------------------------------------------------------------
+
+derleyici tarafından yazılan copy constructor
+
+a- sınıfnın nonstatic, public üye fonksiyonudur
+b- inline olarak tanımlanmış kabul edilir
+c- alttaki gibi imzaya sahiptir
+
+   Myclass(const Myclass &r);
+
+
+
+derleyici nasıl copy ctor yazacagını belirler
+
+
+class Myclass{
+public:
+   Myclass(const Myclass &other) : t(other.t), x(other.x), u(other.u)
+   {
+
+   }
+}
+
+private:
+   T t;
+   X x;
+   U u;
+
+}
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class Myclass{
+public:
+    Myclass() = default;
+    //Myclass(const Myclass &other) : mx{other.mx}, md{other.md}{};
+    Myclass(const Myclass &other) : mx{other.mx}, md{other.md}
+    {
+        cout << "Myclass copy ctor\n";
+    };
+
+    void print()const
+    {
+        cout << "mx = " << mx << " md = " << md <<"\n";
+    }
+
+    void set(int x, double d)
+    {
+        mx = x;
+        md = d;
+    }
+
+private:
+    int mx = 10;
+    double md = 6.6;
+};
+
+int main()
+{
+    Myclass m;
+    m.print();
+    m.set(11, 78);
+    m.print();
+
+    Myclass m2 = m;
+    m2.print();
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class Myclass{
+public:
+    Myclass()
+    {
+        cout << "Myclass default ctor this : " << this << "\n";
+    }
+
+    Myclass(const Myclass &other)
+    {
+        cout << "Myclass copy ctor this : " << this << "\n";
+        cout << "&other                 : " << &other << "\n";
+    };
+
+    ~Myclass()
+    {
+       cout << "Myclass dtor this : " << this << "\n";
+    }
+
+private:
+
+};
+
+int main()
+{
+    Myclass m1;
+    cout << "&m1  : " << &m1 << "\n";
+    Myclass m2 = m1; //m2 için copy ctor cagrılacak
+    cout << "&m2  : " << &m2 << "\n";
+    Myclass m3(m1); //m3 için copy ctor cagrılacak
+    Myclass m4{m1};//m4 için copy ctor cagrılacak
+
+    auto m5{m1}; //m5 için copy ctor cagrılacak
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class Myclass{
+public:
+    Myclass()
+    {
+        cout << "Myclass default ctor this : " << this << "\n";
+    }
+
+    Myclass(const Myclass &other)
+    {
+        cout << "Myclass copy ctor this : " << this << "\n";
+        cout << "&other                 : " << &other << "\n";
+    };
+
+    ~Myclass()
+    {
+       cout << "Myclass dtor this : " << this << "\n";
+    }
+
+private:
+
+};
+
+void func(Myclass pm)
+{
+    cout << "func islevi cagrildi\n";
+}
+
+int main()
+{
+    Myclass m1;
+    cout << "&m1  : " << &m1 << "\n";
+    func(m1);
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+T x = value1;
+T y = value2;
+
+x = y;
+
+shalow copy yaptıgı value'ları copyalam işlemi denir
+
+
+
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//.hpp
+class MyString{
+public:
+    MyString(const char *pstr) : mlen{strlen(pstr)}
+    {
+        mp = static_cast<char *>(malloc(mlen + 1));
+
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, pstr);
+    }
+
+    ~MyString(){
+        cout << "dtor this : " << this << "\n";
+
+        if(mp){
+            free(mp);
+        }
+
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+    }
+
+    //user tarafaından copy stor
+    //deep copy
+    MyString(const MyString &other) : mlen{other.mlen}
+    {
+        cout << "Mystring copy ctor this : " << this << "\n";
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+    }
+
+    size_t length()const{
+        return mlen;
+    }
+
+    void print()const{
+        cout << "[" << mp << "]\n";
+    }
+
+private:
+    size_t mlen;
+    char *mp;
+};
+
+void func(MyString str)
+{
+    cout << "func cagrildi\n";
+    str.print();
+    cout << "func sona eriyor\n";
+}
+
+int main()
+{
+    MyString ms("Orhan OZTURK");
+    cout << "len : " << ms.length() << "\n";
+    ms.print();
+    func(ms);
+    ms.print();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+copy assignment function --> yeni ismi
+assignment operant function --> eski ismi
+
+T x;
+T y;
+
+x = y;  copy assignment function cagrılacak
+
+T z = x; copy ctor
+T z{x};
+
+
+class Myclass{
+private:
+  T t;
+  U u;
+
+public:
+  Myclass &operator=(const Myclass &other)
+  {
+    t = other.t;
+    u = other.u;
+
+    return *this;
+  }
+
+}
+
+
+
+m1 = m2;
+
+aslında arkada soyle olur
+
+m1.operator=(m2)
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    void func()
+    {
+        cout << "Myclass::func() this = " << this << "\n";
+    }
+};
+
+int main()
+{
+    Myclass x, y;
+
+    cout << "&x = " << &x << "\n";
+    //x = y;
+    x.operator=(y).func();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Counter{
+public:
+    Counter() = default;
+    Counter(int x) : mx{x}{}
+    void print()const{
+        cout << "mx = " << mx << "\n";
+    }
+
+    void set(int val)
+    {
+        mx = val;
+    }
+
+private:
+  int mx = 0;
+};
+
+int main()
+{
+    Counter c1{123};
+    Counter c2{456};
+
+    c1.print();
+    //c2.print();
+
+    //c1 = c2;
+
+    //c1.operator=(c2);
+
+    (c1 = c2).print();
+
+    c1.print();
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Counter{
+public:
+    Counter() = default;
+    Counter(int x) : mx{x}{}
+    void print()const{
+        cout << "mx = " << mx << "\n";
+    }
+
+    void set(int val)
+    {
+        mx = val;
+    }
+
+    Counter &operator=(const Counter &other)
+    {
+        cout << "operator=(const Counter &other) called this : " << this << "\n";
+        cout << "&other = " << &other << "\n";
+        mx = other.mx;
+
+        return *this;
+    }
+
+private:
+  int mx = 0;
+};
+
+int main()
+{
+    Counter c1, c2, c3, c4;
+    Counter c5{123};
+
+    cout << "&c1 = " << &c1 << "\n";
+    cout << "&c2 = " << &c2 << "\n";
+
+    c1 = c2;
+
+    cout << "\n";
+
+    //c1.operator=(c2);
+
+    c2 = c1;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Counter{
+public:
+    Counter() = default;
+    Counter(int x) : mx{x}{}
+    void print()const{
+        cout << "mx = " << mx << "\n";
+    }
+
+    void set(int val)
+    {
+        mx = val;
+    }
+
+    Counter &operator=(const Counter &other)
+    {
+        cout << "operator=(const Counter &other) called this : " << this << "\n";
+        cout << "&other = " << &other << "\n";
+        mx = other.mx;
+
+        return *this;
+    }
+
+private:
+  int mx = 0;
+};
+
+int main()
+{
+    Counter c1, c2, c3, c4;
+    Counter c5{123};
+
+    c1 = c2 = c3 = c4 = c5;
+
+    c1.operator=(c2.operator=(c3.operator=(c4.operator=(c5))));
+
+    c1.print();
+    c2.print();
+    c3.print();
+    c4.print();
+    c5.print();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+Peki ne zaman copy asssigment function yazacaz ne zaman gerekli?
+Deep copy yapmamız gerektiğinde yazmamız gerekli
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class MyString{
+public:
+    MyString(const char *pstr) : mlen{strlen(pstr)}
+    {
+        mp = static_cast<char *>(malloc(mlen + 1));
+
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, pstr);
+    }
+
+    ~MyString(){
+        cout << "dtor this : " << this << "\n";
+
+        if(mp){
+            free(mp);
+        }
+
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+    }
+
+    //user tarafından copy ctor
+    //deep copy
+    MyString(const MyString &other) : mlen{other.mlen}
+    {
+        cout << "Mystring copy ctor this : " << this << "\n";
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+    }
+
+    size_t length()const{
+        return mlen;
+    }
+
+    void print()const{
+        cout << "[" << mp << "]\n";
+    }
+
+    //user tarafından copy assigment func
+    //deep copy
+    MyString &operator=(const MyString &other)
+    {
+        free(mp);
+        mlen = other.mlen;
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+        return *this;
+    }
+
+private:
+    size_t mlen;
+    char *mp;
+};
+
+void func(MyString str)
+{
+    cout << "func cagrildi\n";
+    str.print();
+    cout << "func sona eriyor\n";
+}
+
+int main()
+{
+    MyString s1{"Orhan OZTURK"};
+    s1.print();
+
+    if(1){
+        MyString s2("Sueda");
+        s2.print();
+        s1 = s2;
+        s1.print();
+    }
+
+    s1.print();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class MyString{
+public:
+    MyString(const char *pstr) : mlen{strlen(pstr)}
+    {
+        mp = static_cast<char *>(malloc(mlen + 1));
+
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, pstr);
+    }
+
+    ~MyString(){
+        cout << "dtor this : " << this << "\n";
+
+        if(mp){
+            free(mp);
+        }
+
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+    }
+
+    //user tarafından copy ctor
+    //deep copy
+    MyString(const MyString &other) : mlen{other.mlen}
+    {
+        cout << "Mystring copy ctor this : " << this << "\n";
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+    }
+
+    size_t length()const{
+        return mlen;
+    }
+
+    void print()const{
+        cout << "[" << mp << "]\n";
+    }
+
+    //user tarafından copy assigment func
+    //deep copy
+    MyString &operator=(const MyString &other)
+    {
+        if(this == &other)
+            return *this;
+
+        free(mp);
+        mlen = other.mlen;
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+        return *this;
+    }
+
+private:
+    size_t mlen;
+    char *mp;
+};
+
+void func(MyString str)
+{
+    cout << "func cagrildi\n";
+    str.print();
+    cout << "func sona eriyor\n";
+}
+
+int main()
+{
+    MyString s1{"Orhan OZTURK"};
+    s1.print();
+
+    s1 = s1; //self-assigment
+
+    s1.print();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+class Myclass{
+public:
+   Myclass();
+   ~Myclass();
+   Myclass(const Myclass &other);
+   Myclass &operator=(const Myclass &other);
+}
+
+
+RAII
+
+Big Three
+Destructor  -- Alinan yerleri geri vermek
+Copy Constructor --- kaynak koyalanaır ama deep copy ihtiyac var
+Assignment Op. Func.  --- kaynak koyalanaır ama deep copy ihtiyac var
+
+Big Five Cıktı
+Move'lar işin içine girdi
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
 
 
