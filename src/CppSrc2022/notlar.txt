@@ -10627,7 +10627,967 @@ Move'lar işin içine girdi
 /***************************************************/
 /***************************************************/
 
+Move assigment konusalım
 
+kopyalama yapılacak nesnenin hayatının bitmek üzere oldugundan emin oldugumuzda move copy yaparız
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass(const Myclass &); //copy ctor L value lar cagrılacak
+    Myclass(Myclass &&); //move ctor PR ve X value için cagrılacak
+
+    Myclass &operator=(const Myclass &); //copy assignment L value lar için çağrılacak
+    Myclass &operator=(Myclass &&); //move assigment PR ve X value lar için cagrılacak
+
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{};
+
+
+void func(const Myclass &r)
+{
+    cout << "func(const Myclass &r)\n";
+}
+
+void func(Myclass &&r)
+{
+    cout << "func(Myclass &&r)\n";
+}
+
+int main()
+{
+    Myclass m;
+
+    func(m); //usteki cagrılır
+
+    func(std::move(m)); //alttaki cagrılacak
+
+}
+
+/***************************************************/
+/***************************************************/
+
+kitap tavsiyesi
+
+Scott Meyers
+
+Effective Modern C++
+
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Myclass{
+public:
+    Myclass()=default;
+    Myclass(const Myclass &)
+    {
+        cout << "copy ctor\n";
+    }
+
+    Myclass(Myclass &&)
+    {
+        cout << "move ctor\n";
+    }
+};
+
+
+
+int main()
+{
+    Myclass m1;
+
+    Myclass m2{ m1 };
+
+    Myclass m3{move(m1)}; //bilerek ve isteyerek hayatını calıyorum m1 in
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//derleyicinin yazdıgı move ctor ve move assigment
+
+//.hpp
+class Myclass{
+public:
+    Myclass(Myclass &&other) : mt(move(other.mt)), mu(move(other.mu))
+    {}
+
+    Myclass &operator=(Myclass &&other)
+    {
+        mt = std::move(other.mt);
+        mu = std::move(other.mu);
+    }
+
+private:
+    T mt;
+    U mu;
+};
+
+
+
+int main()
+{
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class MyString{
+public:
+    MyString(const char *pstr) : mlen{strlen(pstr)} //user declared ctor
+    {
+        mp = static_cast<char *>(malloc(mlen + 1));
+
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, pstr);
+    }
+
+    //taşıyan kurucu işlev
+    //move ctor
+    MyString(MyString &&other) : mlen{other.mlen}, mp{other.mp}
+    {
+        other.mp = nullptr;
+    }
+
+    ~MyString(){
+        cout << "dtor this : " << this << "\n";
+
+        if(mp){
+            free(mp);
+        }
+
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+    }
+
+    //user tarafından copy ctor
+    //deep copy
+    MyString(const MyString &other) : mlen{other.mlen}
+    {
+        cout << "Mystring copy ctor this : " << this << "\n";
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+    }
+
+    size_t length()const{
+        return mlen;
+    }
+
+    void print()const{
+        cout << "[" << mp << "]\n";
+    }
+
+    //user tarafından copy assigment func
+    //deep copy
+    MyString &operator=(const MyString &other)
+    {
+        if(this == &other)
+            return *this;
+
+        free(mp);
+        mlen = other.mlen;
+
+        mp = static_cast<char *>(malloc(mlen + 1));
+        if(!mp){
+            cerr << "bellek yetersiz\n";
+            exit(EXIT_FAILURE);
+        }
+
+        cout << "consructor this : " << this << "\n";
+        cout << "the address of allocated block : " << (void *)mp << "\n";
+        strcpy(mp, other.mp);
+
+        return *this;
+    }
+
+    MyString &operator=(MyString &&other)
+    {
+        if(this == &other)
+            return *this;
+
+        mlen = other.mlen;
+        std::free(mp);
+        mp = other.mp;
+        other.mp = nullptr;
+
+        return *this;
+    }
+
+private:
+    size_t mlen;
+    char *mp;
+};
+
+void func(MyString str)
+{
+    cout << "func cagrildi\n";
+    str.print();
+    cout << "func sona eriyor\n";
+}
+
+int main()
+{
+    MyString s1{"Orhan OZTURK"};
+    s1.print();
+
+    s1 = s1; //self-assigment
+
+    s1.print();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+Modern C++ ile gelen önemli kurallar
+
+not declared
+
+user declared
+   user declared  --> defined
+   user declared  --> default
+   user declared  --> deleted
+
+implicitly declared
+   implicitly declared  --> defaulted
+   implicitly declared  --> deleted
+
+
+Derleyici sınıfın özel üye fonksiyonunu kendisi yazıyor ise implicitly declared
+
+derleyici kodu yazması gerektigi gib yazar ikeb dilin kurallarını cigniyorsa  derleyici sentaks hatası vermez
+
+yazcagı fonksiyonu delete eder
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//.hpp
+class Member{
+public:
+    Member(int);
+};
+
+class Myclass{
+public:
+
+    //derleyici arka tarafta bu hale getiriyor
+    //Myclass() = delete;
+private:
+    Member mx;
+};
+
+int main()
+{
+    Myclass m; //sentaks hatası myclass ctor delete edildigi için
+
+}
+
+/***************************************************/
+/***************************************************/
+
+oyle sınıdlar var ki
+  kopyalama kapatılmıs
+  ama tasıma acılmıs
+
+  copy stor
+  copy assigment
+
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass();
+    Myclass(const Myclass &) = delete;
+    Myclass &operator=(const Myclass &) = delete;
+
+    //kendimiz tanımladıgımız için copy ctor ve copy assigment tı
+    //move ları kendmiz yazmalıyız
+    //bu sayade kopyalama kapatılmıs tasımaya acılmıs olur
+
+
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//istasna durum
+//copy ctor cagrılır
+
+//hpp
+
+class Member{
+private:
+    Member(Member &&){}
+public:
+    Member(){}
+    Member(const Member &){cout << "Member copy ctor\n";}
+};
+
+class Myclass{
+    Member m;
+    //normalde move delete edilecek ama istisna
+};
+
+int main()
+{
+    Myclass m1;
+    Myclass m2(move(m1));
+}
+
+/***************************************************/
+/***************************************************/
+
+geçici nesneler -- temporary objects
+conversion constructor
+dinamik omurlu nesneler
+
+
+temporary objects
+oyle nesneler ki kodda belirli isimleri yok
+kullanılan ifadelerden sonra hayatları biter
+
+bizi ilgilendiren kısım sınıf turunden geçici nesneler
+
+
+ornek
+   Myclass() //bu gecici nesne default ctor ile olsutrdugum
+   Myclass(10, 25) //parametreli geçici nesne olusturulması
+
+
+
+Geçici nesne olusturuan ifadeler R value, Pr value expression dir
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+private:
+    int mx;
+public:
+    Myclass():mx(0)
+    {
+        cout << "Myclass() this : " << this << "\n";
+    }
+
+    Myclass(int val):mx(val)
+    {
+        cout << "Myclass(int val) this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this : " << this << "\n";
+    }
+};
+
+void func(const Myclass &r)
+{
+    cout << "func cagrıldı\n";
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+    func(Myclass(15)); //temprory object
+    cout << "Main devam ediyor\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+private:
+    int mx;
+public:
+    Myclass():mx(0)
+    {
+        cout << "Myclass() this : " << this << "\n";
+    }
+
+    Myclass(int val):mx(val)
+    {
+        cout << "Myclass(int val) this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this : " << this << "\n";
+    }
+};
+
+void func(const Myclass &r)
+{
+    cout << "func cagrıldı\n";
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+    Myclass m(15);
+    func(m); //L value expr
+    cout << "Main devam ediyor\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+private:
+    int mx;
+public:
+    Myclass():mx(0)
+    {
+        cout << "Myclass() this : " << this << "\n";
+    }
+
+    Myclass(int val):mx(val)
+    {
+        cout << "Myclass(int val) this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this : " << this << "\n";
+    }
+};
+
+void func(const Myclass &r)
+{
+    cout << "func const Myclass &r cagrildi\n";
+}
+
+void func(Myclass &&r)
+{
+    cout << "func Myclass &&r cagrildi\n";
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+    func(Myclass());
+    cout << "Main devam ediyor\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+private:
+    int mx;
+public:
+    Myclass():mx(0)
+    {
+        cout << "Myclass() this : " << this << "\n";
+    }
+
+    Myclass(int val):mx(val)
+    {
+        cout << "Myclass(int val) this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this : " << this << "\n";
+    }
+};
+
+void func(const Myclass &r)
+{
+    cout << "func const Myclass &r cagrildi\n";
+}
+
+void func(Myclass &&r)
+{
+    cout << "func Myclass &&r cagrildi\n";
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+    if(true){
+        //life
+        //bir referans gecici nesneye baglanırsa
+        //gecici nesnenin ömrü referansın ömür scope'nun sonuna kadar devam eder
+        const Myclass &r = Myclass{12};
+        cout << "Main devam ediyor 1\n";
+        cout << "Main devam ediyor 2\n";
+    }
+    cout << "Main devam ediyor 3\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+conversion constructor  -- dönüştüren kurucu işlev
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Data{
+public:
+    Data();
+    //Data(int);
+};
+
+int main()
+{
+    Data mydata;
+    mydata = 10; //sentaks hatası
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Data{
+public:
+    Data();
+    Data(int);
+};
+
+int main()
+{
+    Data mydata;
+    mydata = 10; //nasıl olduda geçerli oldu
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Data{
+public:
+    Data();
+    Data(int);
+};
+
+int main()
+{
+    Data mydata;
+   //mydata = 10; //nasıl olduda geçerli oldu
+
+    //derleyici sözde söyle bir kod yazar
+    //geçici nesne olustrur
+    //Data(10) //seklinde
+    //ve derleyici soyle kod üretir
+    mydata.operator=(Data(10));
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Counter{
+private:
+    int cnt;
+
+public:
+    Counter() : cnt{0}
+    {
+        cout << "default ctor this : " << this << "\n";
+    }
+    Counter(int val) : cnt{val}
+    {
+        cout << "Counter(int val) val = " << val << "   this : " << this << "\n";
+    }
+
+    ~Counter()
+    {
+        cout << "Counter dtor this : " << this  << "\n";
+    }
+
+    Counter &operator=(const Counter &other)
+    {
+        cout << "copy assigment this = " << this << " &other = " << &other << "\n";
+        cnt = other.cnt;
+
+        return *this;
+    }
+};
+
+int main()
+{
+    Counter c;
+    c = 567; //resmi çizelim
+    cout << "maint devam ediyor\n";
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass();
+    Myclass(int);
+};
+
+void func(Myclass m);
+void foo(const Myclass &m);
+void bar(Myclass &m);
+
+Myclass g()
+{
+    return 3;
+}
+
+
+int main()
+{
+    Myclass m;
+
+    int ival = 10;
+
+    m = 15;
+
+    func(ival);
+    foo(ival);
+    bar(ival); //sentaks hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+explicit anahtar sözcüğü
+
+explicit ctor
+
+ctor tür donusumu için kullanılır
+bu donusum tür donusturme operatoru ile kullanılır
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass();
+    explicit Myclass(int); //explicit anahtar sozcugunu sadece hpp dosyasında olacak
+};
+
+//cpp
+Myclass::Myclass(int x) //explicit anahtar sozcugu sadece hpğğ dosyasında oalcak yoksa sentaks hatası olsuuru
+{
+
+}
+
+void func(Myclass m);
+void foo(const Myclass &m);
+void bar(Myclass &m);
+
+Myclass g()
+{
+    return 3; //şimdi sentaks hatası
+}
+
+
+int main()
+{
+    Myclass m;
+
+    int ival = 10;
+
+    m = 15; //sentaks hatası
+
+    func(ival);//sentaks hatası
+    foo(ival);//sentaks hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass();
+    explicit Myclass(int); //explicit anahtar sozcugunu sadece hpp dosyasında olacak
+};
+
+//cpp
+Myclass::Myclass(int x) //explicit anahtar sozcugu sadece hpğğ dosyasında oalcak yoksa sentaks hatası olsuuru
+{
+
+}
+
+void func(Myclass m);
+void foo(const Myclass &m);
+void bar(Myclass &m);
+
+Myclass g()
+{
+    return static_cast<Myclass>(3); //gecerli
+}
+
+
+int main()
+{
+    Myclass m;
+
+    int ival = 10;
+
+    m = static_cast<Myclass>(15); //geçerli
+
+    func(static_cast<Myclass>(ival));//geçerli
+    foo(static_cast<Myclass>(ival));//geçerli
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass();
+    explicit Myclass(int); //explicit anahtar sozcugunu sadece hpp dosyasında olacak
+};
+
+
+
+int main()
+{
+    Myclass m = 10; //copt ctor artık sentask hatasına olur explicit anahtar sozcugu kullanılşdıgı için
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//ctor convertion işlimini birden fazla parametre içinde yapabilirsiniz
+//parametreli ctor explicit yapalırsa sentaks hatasına düşer
+
+//hpp
+class Myclass{
+private:
+    int mx = 0, my = 0;
+public:
+    Myclass() = default;
+    Myclass(int a, int b) : mx {a}, my {b}{}
+    void print()const
+    {
+        cout << "mx = " << mx << "  my " << my << "\n";
+    }
+};
+
+int main()
+{
+    Myclass m;
+
+    m = {12, 45};
+    m.print();
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//default ctor explicit degil ise gecerli
+//explicit yapar isek sentaks hatası
+//cunku otomatik tur donusumu yapılıyor
+
+//hpp
+class Myclass{
+public:
+    Myclass();
+};
+
+Myclass func()
+{
+    ///
+
+    return {};
+}
+
+int main()
+{
+    Myclass m = {};
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//soru hangi ctor cagrılır
+
+//hpp
+class Myclass{
+public:
+    explicit Myclass(int)
+    {
+        cout << "Myclass int \n";
+    }
+
+    Myclass(double)
+    {
+        cout << "Myclass double\n";
+    }
+};
+
+int main()
+{
+    int ival = 10;
+    //Myclass m(ival); //gecerli
+
+    Myclass m1 = ival; //double parametreli ctor cagrılır
+}
+
+/***************************************************/
+/***************************************************/
+
+
+Copy elision -- copy elimination
 
 
 
