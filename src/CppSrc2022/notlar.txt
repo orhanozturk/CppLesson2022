@@ -11589,6 +11589,1347 @@ int main()
 
 Copy elision -- copy elimination
 
+derleyici durumdan vazife çıkartarak
+kopyalama yapamadan bir kod üretiyor
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//hpp
+class Myclass{
+public:
+    Myclass()
+    {
+        cout << "Myclass default ctor this : " << this << "\n";
+    }
+
+    Myclass(int)
+    {
+        cout << "Myclass int ctor this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this = " << this << "\n";
+    }
+
+    Myclass(const Myclass &) = delete;
+};
+
+
+//RVO --> return value optimization
+//C++11 ile mandatory copy elision
+Myclass foo()
+{
+    cout << "foo cagriildi\n";
+    return Myclass{10};
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+
+    Myclass mx = foo();
+
+    cout << "Main devam ediyor\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//hpp
+class Myclass{
+public:
+    Myclass()
+    {
+        cout << "Myclass default ctor this : " << this << "\n";
+    }
+
+    Myclass(int)
+    {
+        cout << "Myclass int ctor this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this = " << this << "\n";
+    }
+
+    Myclass(const Myclass &)
+    {
+        cout << "copy ctor cagrildi\n";
+    }
+
+    void set1(int x)
+    {
+        //
+    }
+
+    void set2(int x)
+    {
+        //
+    }
+};
+
+
+//RVO --> return value optimization
+//C++17 ile mandatory copy elision
+
+//NRVO named return  value optimization
+//cogu yazacagınız fonksiyon bu kategoriye giriyor
+Myclass foo()
+{
+    cout << "foo cagriildi\n";
+    Myclass m;
+
+    cout << "foo devam ediyor\n";
+    m.set1(22);
+    m.set2(11);
+
+    cout << "foo sona eriyor\n";
+
+    return m;
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+
+    Myclass mx = foo();
+
+    cout << "Main devam ediyor\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+//hpp
+class Myclass{
+public:
+    Myclass()
+    {
+        cout << "Myclass default ctor this : " << this << "\n";
+    }
+
+    Myclass(int)
+    {
+        cout << "Myclass int ctor this : " << this << "\n";
+    }
+
+    ~Myclass()
+    {
+        cout << "Myclass dtor this = " << this << "\n";
+    }
+
+    Myclass(const Myclass &) = delete;
+
+    void set1(int x)
+    {
+        //
+    }
+
+    void set2(int x)
+    {
+        //
+    }
+};
+
+
+//RVO --> return value optimization
+//C++17 ile mandatory copy elision
+
+//NRVO named return  value optimization
+//cogu yazacagınız fonksiyon bu kategoriye giriyor
+Myclass foo()
+{
+    cout << "foo cagriildi\n";
+    Myclass m;
+
+    cout << "foo devam ediyor\n";
+    m.set1(22);
+    m.set2(11);
+
+    cout << "foo sona eriyor\n";
+
+    return m; //copt ctor delete ettiğimizde artık sentaks hatası oldu
+}
+
+int main()
+{
+    cout << "Main basladi\n";
+
+    Myclass mx = foo();
+
+    cout << "Main devam ediyor\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+sınıfın static veri elemanları ve üye fonksiyonları
+
+
+data members
+  static
+  non-static
+
+member functions
+  static
+  nonstatic
+   const
+   nonconst
+
+
+type members
+
+sınıfın static veri elemanları sınıfınn kendisi ile ilgilidir
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//hpp
+class Myclass{
+public:
+private:
+    int mx, my;
+    char str[16];
+    double dval;
+    static int sx;
+    static int sy;
+    static int sr[100];
+};
+
+int main()
+{
+    //sınıfın static nesnesi sınıfın yer kaplama alanını değiştirmez
+    cout << "sizeof(Myclass) = " << sizeof (Myclass) << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//hpp
+//sııfın statik veri ögeleri sınıfnın içinde bildirimi yapılır tanımlanmaz
+//bu veri elemanları cpp dosyasında ayrıca tanımlanmaları gerekir
+class Myclass{
+public:
+    static int sx;
+
+};
+
+//cpp
+//int Myclass::sx;
+
+int main()
+{
+   Myclass::sx = 10; //sentask hatası
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+
+//hpp
+//sııfın statik veri ögeleri sınıfnın içinde bildirimi yapılır tanımlanmaz
+//bu veri elemanları cpp dosyasında ayrıca tanımlanmaları gerekir
+class Myclass{
+public:
+    static int sx;
+
+};
+
+//cpp
+//int Myclass::sx;
+//int Myclass::sx{}; //value init
+//int Myclass::sx(); //sentaks hatası fonksiyon olarak gördüğü için
+//int Myclass::sx = 5;
+//int Myclass::sx{10};
+int Myclass::sx(10); //gecerli
+
+
+int main()
+{
+   Myclass::sx = 10; //sentask hatası
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//sınıfın statik veri elemanları "incomplete type " olabilir
+
+class Orhn;
+
+//hpp
+class Myclass{
+public:
+    static Orhn orhn; //
+
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+   Myclass m; //sentaks hatası cunku sizeof degeri derleyici bilmek zorunda
+
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//C++ dilinde bir sınıfın kendi türünden static veri elemnı olabilir
+//fakat kendi türünden nonstatic veri elemanı olamamlı
+
+//hpp
+class Myclass{
+public:
+   static Myclass m; //bu gecerli
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+   static unsigned char buffer[]; //gecerli, eger static olmasaydı gecerisz boyut bilgisini vermediğimiz için
+};
+
+//cpp
+//ilk deger verdiğimiz için boyutu belirtmek zorundayiz
+unsigned char Myclass::buffer[100];
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+   static unsigned char buffer[]; //gecerli, eger static olmasaydı gecerisz boyut bilgisini vermediğimiz için
+};
+
+//cpp
+//ilk deger verdiğimiz için boyutu belirtmek zorundayiz
+unsigned char Myclass::buffer[] = {2, 3, 4, 5, 6, 7, 8};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    static int mx;
+};
+
+//cpp
+int Myclass::mx{};
+
+int main()
+{
+    cout << "Myclass::mx = " << Myclass::mx << "\n";
+
+    Myclass::mx = 10;
+
+    cout << "Myclass::mx = " << Myclass::mx << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    int x = 10;
+    static int mx;
+};
+
+//cpp
+int Myclass::mx{};
+
+int main()
+{
+    Myclass m;
+    m.x = 10;
+    m.mx = 20;
+
+
+    Myclass *p{&m};
+    Myclass &mr{m};
+
+    p->mx = 25;
+    mr.mx = 55;
+
+    //bunlar gecerli ama böyle kodlar yazmayı onermiyoruz
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    static int x;
+    static int mx;
+};
+
+//cpp
+int x = 10; //global degişken sınıfla baglantısı yok
+int Myclass::x = 20;
+int Myclass::mx = x; //mx degeri global x'in degerimi yoksa sınıfın static x degerimi?
+
+int main()
+{
+    cout << "Myclaass::mx : " << Myclass::mx << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+ const ve integral type (tamsayı türlerinden) static veri ögelerine sınıf içinde ilk deger verilebilir.
+ bu durumda be veri ögelerini cpp dosyasında ayrıca tanımlanmasda tanımlanmıs kabul edilir
+
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    const static int x = 10;
+};
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    static const double x = 10.0; //sentaks hatası (integral type) integer type girmediğimiz için
+};
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    static const bool x = true; //gecerli, cunku booldda bir tam sayı türü
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    const static int sx = 11;
+    constexpr static int sy = 12;
+    const static double sd = 1.2; //sentaks hatası
+    constexpr static double sf = 1.2; //gecerli
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+sınfın static üye fonksiyonları  -- static member functions
+
+
+sınfın static üye fonksiyonları this pointer'a sahip olmaz
+yani bir instance'ın adresini gizlice almaz
+dolayısı ile dogrudan bir instance cagrılmayan sınfın geneli için bir takım faydalar saglayan
+uye fonksiyonlar
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    void func(int, int);
+};
+
+int main()
+{
+    Myclass m;
+    m.func(1, 3); //burada m  nin adresi gizli olarak func a gonderiliyor
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    static int func(int);
+};
+
+int main()
+{
+    Myclass m;
+
+    //func(12); //namelookup error
+
+    Myclass::func(15); //bu sekilde cagrı yapmalıyız
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//static uye fonksiyon sınınfın ıcınde inline yapabildiğimiz gibi
+//cpp dosyasında da tanımı yapılabilir
+
+//hpp
+class Myclass{
+public:
+    static int func(int x)
+    {
+        return x + x;
+    }
+};
+
+int main()
+{
+    Myclass m;
+
+    auto val = Myclass::func(15);
+    cout << "val = "  << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//static uye fonksiyon sınınfın ıcınde inline yapabildiğimiz gibi
+//cpp dosyasında da tanımı yapılabilir
+
+//hpp
+class Myclass{
+public:
+    static int func(int x);
+};
+
+//cpp
+//cpp dosyasında static anahtar keyword u kullanılmayacak
+int Myclass::func(int x){
+    return x + x;
+}
+
+int main()
+{
+    Myclass m;
+
+    auto val = Myclass::func(15);
+    cout << "val = "  << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//static uye fonksiyon sınınfın ıcınde inline yapabildiğimiz gibi
+//cpp dosyasında da tanımı yapılabilir
+
+//hpp
+class Myclass{
+public:
+    static int func(int x);
+};
+
+//cpp
+//cpp dosyasında static anahtar keyword u kullanılmayacak
+
+//kullanıcıya bilgi vermek amaclı bu fonksiyonun sadece static oldugunu belirtmek için bu yapı kullanılabilir
+#define STATIC
+
+STATIC int Myclass::func(int x){
+    return x + x;
+}
+
+int main()
+{
+    Myclass m;
+
+    auto val = Myclass::func(15);
+    cout << "val = "  << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    static void func(int x)
+    {
+        mx = 10;//sentaks hatası
+        //this pointer almadıgı için static fonk.
+        //sıfının mx goremeyecek
+        //bu namelookup hatası degil
+
+    }
+
+private:
+    int mx;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    static void foo(int x)
+    {
+        //mx = 10;
+        ival = 20; //gecerli sınıfn statick elemanları sınınfın static uye fonksiyonları içinde bu sekilde kullanılabilir
+
+        Myclass::ival = 40; //gibide kullanbiliriz
+    }
+
+    void func()
+    {
+        mx = 10;
+        Myclass::ival = 50;
+    }
+
+private:
+    int mx;
+    static int ival;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    void foo(int x)
+    {
+        //bu iki şekilde de cagrabiliriz
+        func();
+        this->func();
+    }
+
+    void func()
+    {
+
+    }
+
+private:
+    int mx;
+    static int ival;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    static void foo(int x)
+    {
+        //static uye fonksiyon için nonstatic cagramayız
+        //cunku this pointer yok
+        func();
+        this->func();
+
+        //static uye fonksiyon cagrabiliriz
+        fuu();
+    }
+
+    void func()
+    {
+
+    }
+
+    static void fuu()
+    {
+
+    }
+
+private:
+    int mx;
+    static int ival;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+Sınıfın static uye fonksiyonları dogrudan ismiyle
+     sınıfın static veri elemanları kullanılablir
+     sınıfın static üye foknsyonları cagrılabilir
+
+Sınıfın static uye fonksiyonları dogrudan ismiyle
+    sınıfın non static veri elemanlarını kullanamaz
+    sınıfın non static uye fonksiyonlarını cagıramaz
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    //sınıfın static uye fonksiyonu const olabilir mi ?
+    //HAYIR
+
+    static void func()//const
+    {
+
+    }
+
+    //kimin constlugu bu constluk
+
+    /*
+    static void func(const Myclass *this)//const
+    {
+        //this pointer const'lugu
+        //ve static fonk this pointerı olmadıgı için olmazdı
+    }
+    */
+
+    static void func()const
+    {
+
+    }
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    //bu yapılar gecerlidir
+    static void func(Myclass &r)
+    {
+        r.mx = 10;
+    }
+
+    static void foo(Myclass *r)
+    {
+
+    }
+
+    static void foo(const Myclass *r)
+    {
+
+    }
+
+    static void foo(const Myclass &r)
+    {
+
+    }
+
+
+private:
+    int mx;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    void func()const
+    {
+        //gecerli mi
+        mx = 10; //gecerli
+    }
+
+private:
+    static int mx;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    //function overloading mi değil mi ?
+    //evet function overloading
+    void func();
+    static void func(int);
+
+
+private:
+    static int mx;
+};
+
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    static void func(int);
+
+
+private:
+    static int mx;
+};
+
+int main()
+{
+    Myclass m;
+    m.func(10);//eger programcı böyle bir cagrı yaparsa static olmadıgını bilmeden
+    //sentask hatası
+    //ama cagrıdaki m ile hiçbir alakası yok
+
+    Myclass::func(55); //bunla arasında fark yok
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    static void func(int);
+    void func();
+
+private:
+    static int mx;
+};
+
+int main()
+{
+    Myclass m;
+    m.func(10);//statick fonksiyon
+    m.func(); //non static fonksiyon
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+    static void func(int);
+    void func();
+
+    //böylede cagrabiliriz
+    void foo()
+    {
+        func();
+        func(16);
+    }
+
+private:
+    static int mx;
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+
+private:
+    inline static int mx = 15;
+    //C++17
+    //derleyici bunu bir cok dosyasıunda olmasına karsı bir tane görecek
+    //ve header dosyasında böyle tanımlamaıza izin verecek
+
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Account{
+public:
+    //redefinition hatası olur
+    Account(double sum, double interest_rate);
+    Account(double balance, double annault_interest);
+
+    //peki biz böyle ikitane istesem nasıl yaparız
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Complex{
+private:
+    Complex(double r, double i, int);
+    Complex(double distance, double angle);
+public:
+    static Complex createCartesian(double r, double i)
+    {
+        return Complex(r, i, 0);
+    }
+
+    static Complex createPoler(double distance, double angle)
+    {
+        return Complex(distance, angle);
+    }
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+class Complex{
+private:
+    Complex(double r, double i, int);
+    Complex(double distance, double angle);
+public:
+    static Complex createCartesian(double r, double i)
+    {
+        return Complex(r, i, 0);
+    }
+
+    static Complex createPoler(double distance, double angle)
+    {
+        return Complex(distance, angle);
+    }
+};
+
+int main()
+{
+    auto c1 = Complex::createCartesian(1.5, 55);
+    auto c2 = Complex::createPoler(5.6, 55);
+
+}
+
+/***************************************************/
+/***************************************************/
+
+Design pattern
+
+Gamma
+Villisides
+Johnsın
+Helm
+
+
+Gang of four
+GOF pattern denir
+23 tasarım kalıbı var
+
+
+baslangıs olarak su kitap tavsiye
+
+Head first design pattern kitabı yazarı eric freeman
+
+
+/***************************************************/
+/***************************************************/
+
+singleton pattern
+
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//hpp
+
+class Singleton{
+public:
+    static Singleton *getInstance();
+
+    //copylamaya karsı
+    Singleton(const Singleton &) = delete;
+    Singleton &operator=(const Singleton &) = delete;
+
+    void func();
+    void foo();
+    void g();
+
+private:
+    static Singleton *mp;
+    Singleton();
+};
+
+//cpp
+Singleton *Singleton::mp = nullptr;
+Singleton *Singleton::getInstance()
+{
+    if(!mp)
+        mp = new Singleton;
+
+    return mp;
+}
+
+
+int main()
+{
+    auto ps = Singleton::getInstance();
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+scott meyers singleton pattern implemention var
+
+
+kitap Effective modern C++11 ve 14 de mevcut
+
+
+#include <iostream>
+
+
+using namespace std;
+
+//meyers singleton
+//hpp
+class Singleton{
+private:
+    Singleton();
+
+public:
+    static Singleton &getInstance()
+    {
+        static Singleton s; //fonksiyon ilk cagrıldgında jayata gelir tekrar gelmez
+        //aynı nesne surekli olarak geri donecek
+
+        return s;
+    }
+};
+
+
+int main()
+{
+
+    auto &s = Singleton::getInstance();
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
 
 
 

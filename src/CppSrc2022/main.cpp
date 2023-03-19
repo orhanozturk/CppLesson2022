@@ -1,29 +1,29 @@
 #include <iostream>
 
+
 using namespace std;
 
-//soru hangi ctor cagrılır
-
+//meyers singleton
 //hpp
-class Myclass{
-public:
-    explicit Myclass(int)
-    {
-        cout << "Myclass int \n";
-    }
+class Singleton{
+private:
+    Singleton();
 
-    Myclass(double)
+public:
+    static Singleton &getInstance()
     {
-        cout << "Myclass double\n";
+        static Singleton s; //fonksiyon ilk cagrıldgında jayata gelir tekrar gelmez
+        //aynı nesne surekli olarak geri donecek
+
+        return s;
     }
 };
 
+
 int main()
 {
-    int ival = 10;
-    //Myclass m(ival); //gecerli
 
-    Myclass m1 = ival; //double parametreli ctor cagrılır
+    auto &s = Singleton::getInstance();
 }
 
 /***************************************************/
