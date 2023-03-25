@@ -12927,6 +12927,531 @@ int main()
 /***************************************************/
 
 
+#include <iostream>
+
+
+using namespace std;
+
+/*
+ * Mulakat sorusu
+ *
+ * oyle bir sınıf olusturun ki
+ *
+ * sınfın hayatta olan nesnelerin sayısını geri verecek
+ * hayata gelen veya hayatta olan nesnelerin sayısını sınıf bilecek
+ *
+ */
+
+
+class Fighter{
+public:
+    Fighter()
+    {
+       ++ms_live_count;
+       ++ms_total_count;
+    }
+
+    Fighter(std::string name, int age) : m_name{std::move(name)}, m_age{age}
+    {
+        ++ms_live_count;
+        ++ms_total_count;
+    }
+
+    ~Fighter()
+    {
+        --ms_live_count;
+    }
+
+    Fighter(const Fighter &) = delete;
+    Fighter &operator=(const Fighter &) = delete;
+
+    int Age()const{
+        return m_age;
+    }
+
+    std::string Name()const{
+        return m_name;
+    }
+
+    void kill();
+    void run();
+
+    static int get_live_count();
+    static int get_total_count();
+
+private:
+    static int ms_live_count;
+    static int ms_total_count;
+    std::string m_name = "noname"; //default init.
+    int m_age = 0; //default init.
+};
+
+
+//cpp
+#define STATIC
+
+int Fighter::ms_live_count{};
+int Fighter::ms_total_count{};
+
+
+STATIC int Fighter::get_live_count()
+{
+    return ms_live_count;
+}
+
+STATIC int Fighter::get_total_count()
+{
+    return ms_live_count;
+}
+
+
+
+int main()
+{
+
+    cout << "Hayatta olan savascı sayısı : " << Fighter::get_live_count() << "\n";
+    Fighter f1{"Abdulmelik", 30};
+    Fighter f2{"Sueda", 24};
+
+    if(1){
+        auto pf1 = new Fighter{"Aleattin", 44};
+        auto pf2 = new Fighter{"Naz", 55};
+        cout << "Hayatta " << Fighter::get_live_count() << " savascı var" << "\n";
+        cout << "Hayata gelmis toplam savasci sayisi " << Fighter::get_total_count() << "\n";
+        delete pf1;
+        delete pf2;
+    }
+
+    cout << "Hayatta " << Fighter::get_live_count() << " savascı var" << "\n";
+    cout << "Hayata gelmis toplam savasci sayisi " << Fighter::get_total_count() << "\n";
+
+
+    /* bunlar sentask hatası durumda delete edildiği için
+     Fighter x{f1};
+     Fighter y{f2};
+     Fighter z{f1};
+      */
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+scope leakage
+
+
+void func()
+{
+ int x = foo();
+ if(x > 10)
+ {
+  ////
+ }
+
+  //
+  ///
+
+  x burada kullanırsa scope leakage amacı if içinde kullanmaktı
+
+
+bunu önlemek için
+C++17 ile yeni  yeni bir if eklenmiştir
+if with initializer dır
+
+}
+
+
+#include <iostream>
+
+
+using namespace std;
+
+
+int foo(int x, int y);
+int func(int);
+
+int main()
+{
+    int x = foo(1, 6);
+
+    if(x > 10){
+        //
+        func(x);
+    }
+
+    //
+
+    x = 15; //bunu yanlıslıkla yazdık
+            //okuyanı yanlıs yonlendirebilirz
+
+
+    if(auto y = foo(1, 4); y > 10)
+    {
+        func(y);
+    }
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+
+int foo(int x, int y);
+int func(int);
+
+int main()
+{
+    //bunu sakın if with initializer ile karıstırmayalım
+    //bu yapı eskiden beri var
+    if(int x = 5)
+    {
+        //
+        //
+    }
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+
+using namespace std;
+
+
+class Fighter{
+public:
+    Fighter()
+    {
+       msvec.push_back(this);
+    }
+
+    Fighter(std::string name, int age) : m_name{std::move(name)}, m_age{age}
+    {
+        msvec.push_back(this);
+    }
+
+    ~Fighter()
+    {
+        /*
+        auto iter = std::find(msvec.begin(), msvec.end(), this);
+
+        if(iter != msvec.end()){
+            msvec.erase(iter);
+        }else {
+            std::cerr << "hata: aranan deger bulunamadı\n";
+        }
+        */
+
+        if(auto iter = std::find(msvec.begin(), msvec.end(), this); iter != msvec.end()){
+            msvec.erase(iter);
+        } else {
+           std::cerr << "hata: aranan deger bulunamadı\n";
+        }
+    }
+
+    Fighter(const Fighter &) = delete;
+    Fighter &operator=(const Fighter &) = delete;
+
+    void ask_help()
+    {
+        //range for loop ile tanısalım
+        //C++11 ile dile eklendi
+        //derleyiciye kod yazdırmıs oluruz
+
+        cout << this->m_name << "\n";
+        cout << "Dusmanlar beni oldurecek\n";
+
+        for(auto f : msvec){
+            if(f != this)
+                cout << f->m_name << " ";
+        }
+
+        cout << "\n Yardima kosun!!\n";
+    }
+
+    int Age()const{
+        return m_age;
+    }
+
+    std::string Name()const{
+        return m_name;
+    }
+
+    void kill();
+    void run();
+
+    static int get_live_count();
+    static int get_total_count();
+
+private:
+    static::std::vector<Fighter *> msvec;
+    std::string m_name = "noname"; //default init.
+    int m_age = 0; //default init.
+};
+
+
+//cpp
+#define STATIC
+
+STATIC std::vector<Fighter *> Fighter::msvec{};
+
+int main()
+{
+
+    Fighter f1{"alican", 24};
+    Fighter f2{ "sueda", 15};
+    Fighter f3{"abdulmelik", 10};
+
+    auto pf1 = new Fighter{"Suleyman", 55};
+    auto pf2 = new Fighter{"Salih", 44};
+    auto pf3 = new Fighter{"Muhammet", 25};
+
+    delete pf1;
+    delete pf2;
+
+    f2.ask_help();
+
+
+    delete pf3;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+new operatorü
+
+tek bir nesne olsuturan operatordur
+
+void *operator new(size_t n)
+
+
+eger operator new fonksiyonu basarısız olursa
+exception handling mekanizması devreye girer
+bad alacotion mesajı verir
+
+
+((Pointer *) (operator new(sizeof(Point))))->Point(14, 5, 6)
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+
+using namespace std;
+
+class Point; //incomplete type
+
+int main()
+{
+    Point *p = new Point();
+    Point *p2 = new Point{1, 2, 3};
+    Point *p3 {new Point{1, 2, 3}};
+
+
+    auto *pa = new Point();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int x, int y)
+    {
+
+    }
+};
+
+int main()
+{
+    Myclass *p = new Myclass();
+
+    auto *pa = new Myclass(2, 3);
+
+    //
+
+
+    delete pa;
+    delete p;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+operator delete isimli fonksiyon
+
+void operator delete(void *vp);
+
+delete dinamik bellek blogunu geri vermek
+
+
+delete p
+
+
+p->~Point(), operator delete(p);
+
+
+
+eger nesne delete edilmez ise
+ a- destructor cagrılmaz
+ b- operator delete işlevi vagrılmaz
+
+
+resource leak -- kaynak sızıntısı
+memory leak -- bellek sızıntısı ile karsılasırız
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int x, int y)
+    {
+
+    }
+};
+
+int main()
+{
+    Myclass *p = new Myclass();
+
+    auto *pa = new Myclass(2, 3);
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "point.hpp"
+
+
+using namespace std;
+
+//dinamik ömürlü ve hayatı biten nesneyi gösteren pointer dangling hale gelmiştir
+
+int main()
+{
+    Point *p = new Point();
+    Point *p2 = p;
+    cout << "p : " << p << "\n";
+    p->print();
+
+    delete p;
+    p->print(); //dangling pointer
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "point.hpp"
+
+
+using namespace std;
+
+//dinamik ömürlü ve hayatı biten nesneyi gösteren pointer dangling hale gelmiştir
+
+int main()
+{
+    Point *p = new Point();
+    Point *p2 = p;
+    cout << "p : " << p << "\n";
+    p->print();
+
+    delete p;
+
+    //
+
+    //
+    delete p2; //burada tanımsız davranıs olur
+
+}
+
+/***************************************************/
+/***************************************************/
+
+array new operatoru
+birden fazla nesne olusturmak
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "point.hpp"
+
+
+using namespace std;
+
+//dinamik ömürlü ve hayatı biten nesneyi gösteren pointer dangling hale gelmiştir
+
+int main()
+{
+    int n;
+    cout << "kac nesne : ";
+    cin >> n;
+
+    Point *p = new Point[n];
+
+    //delete p;
+
+    delete[]p;
+}
+
+/***************************************************/
+/***************************************************/
+
+smart pointer ve unique_ptr
+
+biz delete kullanamdan nesn
 
 
 
