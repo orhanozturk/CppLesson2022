@@ -13451,18 +13451,911 @@ int main()
 
 smart pointer ve unique_ptr
 
-biz delete kullanamdan nesn
+delete kullanamdan nesnenin belleklerini geri vermesini saglar
+
+bulundugu baslık dosyası <memory>
+
+modern C++ en önemli glerindendir
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "point.hpp"
+#include <memory>
+
+using namespace std;
+
+
+int main()
+{
+    unique_ptr<Point> p(new Point(1, 2, 3));
+    p->print();
+    p->set(4, 5 ,6);
+    p->print();
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "point.hpp"
+#include <memory>
+
+using namespace std;
+
+
+int main()
+{
+    unique_ptr<Point> p(new Point(1, 2, 3));
+
+    //auto p2 = p; //sentaks hatası
+    //unique_ptr nin copy ctor delete edilmiştir
+
+    unique_ptr<Point> p3(new Point(1, 2, 4));
+    p3 = p; //sentask hatası copy assigmnt delete edildiğinden
+
+    //sınıfın copy ctor ve copy asignment yok
+    //sınıfın move ctor ve assignment var
+
+    auto p4 = std::move(p); //artık kaynagı p4 aldı için gecerli
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "point.hpp"
+#include <memory>
+
+using namespace std;
+
+//non copyable but movable
+/*
+ *Eger derleyici sınıfın özel üye fonksiyonlarından birini yazar iken
+ *bir gecersiz kod yazma durumunda düşer ise bu durumada
+ *yazacagı özel üye fonksiyonu delete eder
+ *
+ *
+ *Eger delete edilecek işlev move işlevi ise bu işlevler hiç
+ *bildirilmemiş kabul edilebilir
+ */
+
+class Myclass{
+public:
+    Myclass() = default;
+
+
+    //kopyalanmasını istemiyorum
+    //taşınmasını istemeiyorum anlamına gelecek
+
+    //unique_ptr kopyalanmaya karsı kapatıldıgın için sentasks hatası
+    //am sentaks hatası vermek yerine derleyici copy ctor delete eder
+    //am move yazmasında bir engel olmayacak
+
+    std::unique_ptr<std::string> uptr;
+};
+
+int main()
+{
+    Myclass m1, m2;
+    //Myclass m3 = m2;// derleyici copy ctor delete ettiğinden dolayı
+
+    Myclass m4 = std::move(m2); //gecerli
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+operator overloading -- operator yuklemesi
+
+bir sınıf nesnesinin bir operatoru operandı olmus
+derleyici bu durumdan vzife çıkartarak bunu fonksiyona çeviriyor
+
+neden  böyle bir araç var programcının işini kolaylaştırmak için
+
+
+run time maliyeti yaşanmaz
+bunu çeviri sürecinde yapar
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+
+int main()
+{
+    string s1{"orhan"};
+    string s2{"ozturk"};
+
+    auto s3 = s1 + s2; //toplama operatorunu kullanıyorum
+
+    if(s1 == s2){ //karsılastırma operatorunu kullanıyorum
+
+    }
+}
+
+/***************************************************/
+/***************************************************/
+
+operator fonksiyonu
+
+1- global operator function
+2- member operator function
+   non-static member function   -- olmak zorunda
+
+her operatorde overload edilemez
+
+nokta operatoru overload edilemez
+sizeof operatoru overload edilemez
+:: scope resolution overload edilemez
+. operatoru overload edilemez
+? :  ternary ooverload edilemez
+typeid operatoru overload edilemez
+
+
+->
+*
+&
+[]
+()
+tür donusturme
+
+
+üye fonksiyonu olmak zorunda
+
+special member function
+
+[]
+()
+->
+tür dönüştürme
+
+
+operator fonksiyonların ismi "operator" keyword taşıyacak bundan sonra hangi operator
+overload ediliyor ise
+
+
+operator!
+operator<
+
+
+varsayılan arguman almazlar
+
+sadece bir istisna hariç
+function call () overload eden fonksiyon dışında hiç bir operator fonksiyonuvarsayılan arguman alamaz
+
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+
+};
+
+bool operator!(Myclass m);
+bool operator!();//derleyici itiraz eder
+//bir operator olmak zorunda diye
+
+bool operator!(Myclass m , Myclass m1); //derleyeci itiraz eder yine
+
+int main()
+{
+    Myclass m;
+
+    !m;
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    bool operator!()const;
+    //bool operator!(Myclass m)const; //boyle gecersiz
+    //bool operator!(Myclass m1, Myclass m2)const; //boyle gecersiz
+};
+
+//bool operator!(Myclass m);
+
+int main()
+{
+    Myclass m;
+
+    !m;
+}
+
+/***************************************************/
+/***************************************************/
+
+global fonksiyon olarak overload edilen unary operatorler tek parametre alacak
+üye fonksiyon olarak overload edilen unary operatorler parametre almayacak
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    bool operator>(Myclass m)const;
+    //bool operator>(Myclass m1, Myclass m2)const; //gecersiz
+
+};
+
+bool operator>(Myclass m1, Myclass m2); //binary operator
+
+//bool operator>(Myclass m1); //gecersiz
+
+
+int main()
+{
+    Myclass m1, m2;
+
+    auto m3 = m1 > m2;
+    //!m1;
+}
+
+
+/***************************************************/
+/***************************************************/
+
+global fonksiyon olarak overload edilen binary operatorler iki parametre alacak
+üye fonksiyon olarak overload edilen binary operatorler tek parametre alacak
+
+/***************************************************/
+/***************************************************/
+
+bazı operatorler iki turlude overload edilebilirler
+
+
+*x
+x*y
++a
+a+b
+-a
+a-b
+&a
+a&b
 
 
 
 
 
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    int &operator*();
+
+};
+
+class Matrix{
+public:
+    Matrix operator*(const Matrix &); //çarpma operatoru
+};
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    int &operator*(); //derefernce
+
+};
+
+int &operator*(Myclass); //dereference
+
+
+class Matrix{
+public:
+    Matrix operator*(const Matrix &); //çarpma operatoru
+};
+
+Matrix operator*(const Matrix &, const Matrix &);
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass operator*(Myclass)const;
+    Myclass operator+(Myclass)const;
+    bool operator<(Myclass)const;
+};
+
+
+int main()
+{
+
+    Myclass m1, m2, m3, m4;
+
+    auto f = m1 * m2 + m3 < m4;
+
+
+    //derleyici bunu nasul bir ifadeye ceviriyor
+
+    //auto f2 = m1.operator*(m2).operator+(m3).operator<(m4);
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+
+};
+
+Myclass operator*(Myclass, Myclass);
+Myclass operator+(Myclass, Myclass);
+bool operator<(Myclass, Myclass);
+
+
+int main()
+{
+
+    Myclass m1, m2, m3, m4;
+
+    auto f = m1 * m2 + m3 < m4;
+
+
+    //derleyici bunu nasul bir ifadeye ceviriyor
+
+    //auto f2 = m1.operator*(m2).operator+(m3).operator<(m4);
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+//ostream
+
+class ostream{
+public:
+    ostream &operator<<(int);
+    ostream &operator<<(double);
+    ostream &operator<<(long);
+};
+
+//global olarak tanımlanmıs operator
+std::ostream &operator<<(std::ostream &, const std::string &s);
+
+
+int main()
+{
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Counter{
+public:
+    Counter operator+(int)const;
+};
+
+
+//Counter operator+(Counter, int);
+Counter operator+(int, Counter);
+
+int main()
+{
+
+    Counter c;
+
+    auto cx = c + 5;
+    //auto cy = 4 + c;
+
+    auto cz = c.operator+(5);
+
+
+    auto ct = 5 + c;//sentaks hatası
+
+    //bu problemi global cozum ile cozebiliriz
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    bool operator<(const Myclass &other)const
+    {
+        cout << "Myclass::operator<(const Myclass &other)\n";
+        cout << "this : " << this << "\n";
+        cout << "other : " << &other << "\n";
+        return true;
+    }
+};
+
+int main()
+{
+    Myclass mx, my;
+    cout << "&mx : " << &mx << "\n";
+    cout << "&my : " << &my << "\n";
+
+    bool b = mx < my;
+
+    cout << "b = " << b << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+
+using namespace std;
+
+class Myclass{
+public:
+
+};
+
+
+bool operator<(const Myclass &a, const Myclass &b)
+{
+    cout << "Myclass::operator<(const Myclass &other)\n";
+    cout << "&a : " << &a << "\n";
+    cout << "&b : " << &b << "\n";
+    return true;
+}
+
+int main()
+{
+    Myclass mx, my;
+    cout << "&mx : " << &mx << "\n";
+    cout << "&my : " << &my << "\n";
+
+    bool b = mx < my;
+
+    cout << "b = " << b << "\n";
+}
+
+/***************************************************/
+/***************************************************/
 
 
 
 
 
+operator fonksiyonrın
+geri donus türü ne olmalı
+tamamiyle yapıalcak lojik yapıya baglı
 
 
+
+yada geri donusun referans olup olmadıgı neye göre baglı
+
+T operator()
+T &operator()
+
+
+m1 + m2 // R value olacak
+
+*ptr //içerik operatoru ile olusturulan ifade Lvalue bir ifadedir
+
+
+
+
+/***************************************************/
+/***************************************************/
+
+
+biz nenden operatorleri yazmak durumundayız
+
+standart kutuphanenin operatorlerını kullanamayız cunku bizim tanımladıgımız yeni türü bilemez
+
+/***************************************************/
+/***************************************************/
+
+friend declaration
+arkadaslık bildirimi
+
+sınıfa ait bir kod veya sınıfa ait olmayan fonksiyon sınfıın private
+elemanlarına erişmesini istiyoruz. Bir kodun bizim arkadasımız oldugunu bildirir isek
+bunu sentaks hatası olarak görmeyecek
+
+
+1. global bir fonksiyon arkadaslık verme
+2. bir sınıfın bir uye donksiyonuna arkadaşlık verme
+3. bir sınıfa arkadaslık verme
+
+
+
+1. global bir fonksiyon arkadaslık verme
+
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+using namespace std;
+
+class Myclass{
+private:
+    void pfunc();
+    friend void gfoo(int);
+};
+
+
+void gfoo(int x)
+{
+    ++x;
+    Myclass m;
+    m.pfunc(); //friendlık verildiginden private erişim açıldı
+}
+
+
+
+int main()
+{
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+using namespace std;
+
+class Myclass{
+public:
+    friend void gfoo(int);
+private:
+    void pfunc();
+
+};
+
+
+void gfoo(int x)
+{
+    ++x;
+    Myclass m;
+    m.pfunc(); //friendlık verildiginden private erişim açıldı
+}
+
+
+
+int main()
+{
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+using namespace std;
+
+class orhn{
+public:
+    void foo();
+};
+
+class Myclass{
+public:
+    friend void foo();
+private:
+    void pfunc();
+
+};
+
+void foo()
+{
+    Myclass m;
+    m.pfunc();
+}
+
+
+
+int main()
+{
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+using namespace std;
+
+
+
+class Myclass{
+public:
+    friend class orhn; //sınıfın hepsine arkadaslık izni vermiş oluyorum
+private:
+    void pfunc();
+
+};
+
+
+class orhn{
+public:
+    void f1()
+    {
+        Myclass m;
+        m.pfunc();
+    }
+};
+
+
+
+int main()
+{
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+using namespace std;
+
+
+
+class Myclass{
+public:
+    friend bool operator<(Myclass m1, Myclass m2) //inline func
+    {
+        return m1.mx < m2.mx;
+    }
+
+private:
+    int mx;
+};
+
+
+
+int main()
+{
+
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+A sınıfı B sınıfına arkadaslık vermiş ise
+B sınıfı C sınıfına arkadaslık vermiç ise
+
+
+A sınıfı C sınıfına ... arkdaslık vermiş olmaz
+
+
+/***************************************************/
+/***************************************************/
+
+mint sınıfı yazılıyor
+
+
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+int main()
+{
+    Mint m1, m2{25};
+
+    cout << m1 << " , " << m2 << "\n";
+
+    std::cout << "iki sayi giriniz : ";
+    std::cin >> m1 >> m2;
+
+    if(m1 == m2)
+        printf("esit\n");
+    else
+        printf("esit degil\n");
+
+    cout << boolalpha; //manipator
+
+
+    cout << m1 << " <  " << m2 << " = " << (m1 < m2) << "\n";
+    cout << m1 << " <= " << m2 << " = " << (m1 <= m2) << "\n";
+    cout << m1 << " >  " << m2 << " = " << (m1 > m2) << "\n";
+    cout << m1 << " >= " << m2 << " = " << (m1 >= m2) << "\n";
+    cout << m1 << " == " << m2 << " = " << (m1 == m2) << "\n";
+    cout << m1 << " != " << m2 << " = " << (m1 != m2) << "\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+int main()
+{
+    Mint m1, m2{25};
+
+    cout << m1 << " , " << m2 << "\n";
+
+    std::cout << "iki sayi giriniz : ";
+    std::cin >> m1 >> m2;
+
+    if(m1 == m2)
+        printf("esit\n");
+    else
+        printf("esit degil\n");
+
+    cout << boolalpha; //manipator
+
+    for(;;){
+        auto m1{Mint::Random()};
+        auto m2{Mint::Random()};
+        cout << m1 << " <  " << m2 << " = " << (m1 < m2) << "\n";
+        cout << m1 << " <= " << m2 << " = " << (m1 <= m2) << "\n";
+        cout << m1 << " >  " << m2 << " = " << (m1 > m2) << "\n";
+        cout << m1 << " >= " << m2 << " = " << (m1 >= m2) << "\n";
+        cout << m1 << " == " << m2 << " = " << (m1 == m2) << "\n";
+        cout << m1 << " != " << m2 << " = " << (m1 != m2) << "\n";
+        cin >> m1;
+    }
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+int main()
+{
+    for(;;){
+        auto m1{Mint::Random()};
+        auto m2{Mint::Random()};
+        cout << m1 << " +  " << m2 << " = " << (m1 + m2) << "\n";
+        cout << m1 << " -  " << m2 << " = " << (m1 - m2) << "\n";
+        cout << m1 << " *  " << m2 << " = " << (m1 * m2) << "\n";
+        cout << m1 << " /  " << m2 << " = " << (m1 / m2) << "\n";
+
+        cin >> m1;
+    }
+}
+
+/***************************************************/
+/***************************************************/
 
 

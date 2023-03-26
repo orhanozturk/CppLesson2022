@@ -1,25 +1,21 @@
-
 #include <iostream>
-#include <vector>
-#include <string>
-#include "point.hpp"
-
+#include "mint.hpp"
 
 using namespace std;
 
-//dinamik ömürlü ve hayatı biten nesneyi gösteren pointer dangling hale gelmiştir
 
 int main()
 {
-    int n;
-    cout << "kac nesne : ";
-    cin >> n;
+    for(;;){
+        auto m1{Mint::Random()};
+        auto m2{Mint::Random()};
+        cout << m1 << " +  " << m2 << " = " << (m1 + m2) << "\n";
+        cout << m1 << " -  " << m2 << " = " << (m1 - m2) << "\n";
+        cout << m1 << " *  " << m2 << " = " << (m1 * m2) << "\n";
+        cout << m1 << " /  " << m2 << " = " << (m1 / m2) << "\n";
 
-    Point *p = new Point[n];
-
-    //delete p;
-
-    delete[]p;
+        cin >> m1;
+    }
 }
 
 /***************************************************/
