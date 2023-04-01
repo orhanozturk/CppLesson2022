@@ -11,6 +11,31 @@ public:
     Mint() = default;
     explicit Mint(int val) : mval{val}{}
 
+    Mint & operator++()
+    {
+        ++mval;
+        return *this;
+    }
+
+    Mint operator++(int)
+    {
+        Mint retval{*this};
+        ++(*this);
+        return retval;
+    }
+
+    Mint & operator--()
+    {
+        --mval;
+        return *this;
+    }
+
+    Mint operator--(int)
+    {
+        Mint retval{*this};
+        --(*this);
+        return retval;
+    }
 
     Mint &operator+=(const Mint &other)
     {

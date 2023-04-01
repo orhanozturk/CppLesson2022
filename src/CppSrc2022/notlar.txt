@@ -14358,4 +14358,1080 @@ int main()
 /***************************************************/
 /***************************************************/
 
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+int main()
+{
+    Mint m1{10}, m2{15}, m3{5};
+
+
+    auto m4 = m1 += m2 *= m3;
+
+    cout << "m3 = " << m3 << "\n";
+    cout << "m2 = " << m2 << "\n";
+    cout << "m1 = " << m1 << "\n";
+    cout << "m4 = " << m4 << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+int main()
+{
+    Mint m1, m2{15};
+
+    m1 = ++m2; //Lvalue
+
+    cout << "m1 = " << m1 << "\n";
+    cout << "m2 = " << m2 << "\n";
+
+    m1 = m2++; //Pr Value
+
+
+    cout << "m1 = " << m1 << "\n";
+    cout << "m2 = " << m2 << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+[ ]  index -- sbuscript operatoru
+*    içerik - deferens
+-> ok operatoru
+fonksiyon cagrı operatoru ()
+tür donusturme operatorleri
+
+
+[ ]   index operatoru
+
+
+bu operatoru ele aldıgım referans  olmalı
+
+
+
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+class Array{
+public:
+    Array(size_t size, int val = 0);
+    ~Array();
+    Array(const Array &) = delete;
+    Array &operator=(const Array &) = delete;
+
+    int &operator[](size_t index);
+
+    size_t size()const{return msize;}
+
+    friend std::ostream& operator<<(std::ostream &os, const Array &a);
+
+private:
+    size_t msize;
+    int *mpa;
+};
+
+
+Array::Array(size_t size, int val) : msize{size}, mpa{new int[msize]}
+{
+    for (size_t i = 0; i < msize; ++i) {
+        mpa[i] = val;
+    }
+}
+
+Array::~Array()
+{
+    delete []mpa;
+}
+
+int &Array::operator[](size_t index)
+{
+    return mpa[index];
+}
+
+std::ostream& operator<<(std::ostream &os, const Array &a)
+{
+    os << "[";
+    for (size_t i = 0; i < a.msize -1; ++i) {
+        os << a.mpa[i] << ", ";
+    }
+
+    os << a.mpa[a.msize -1] << "]";
+
+    return os;
+}
+
+
+int main()
+{
+    Array a{10, 7};
+
+    cout << a << "\n";
+
+    for(size_t i = 0; i < a.size(); ++i)
+        a[i] = i;
+
+    cout << a << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+class Array{
+public:
+    Array(size_t size, int val = 0);
+    ~Array();
+    Array(const Array &) = delete;
+    Array &operator=(const Array &) = delete;
+
+    int &operator[](size_t index);
+    const int &operator[](size_t index)const;
+
+    size_t size()const{return msize;}
+
+    friend std::ostream& operator<<(std::ostream &os, const Array &a);
+
+private:
+    size_t msize;
+    int *mpa;
+};
+
+
+Array::Array(size_t size, int val) : msize{size}, mpa{new int[msize]}
+{
+    for (size_t i = 0; i < msize; ++i) {
+        mpa[i] = val;
+    }
+}
+
+Array::~Array()
+{
+    delete []mpa;
+}
+
+int &Array::operator[](size_t index)
+{
+    return mpa[index];
+}
+
+const int &Array::operator[](size_t index) const
+{
+    return mpa[index];
+}
+
+std::ostream& operator<<(std::ostream &os, const Array &a)
+{
+    os << "[";
+    for (size_t i = 0; i < a.msize -1; ++i) {
+        os << a.mpa[i] << ", ";
+    }
+
+    os << a.mpa[a.msize -1] << "]";
+
+    return os;
+}
+
+
+int main()
+{
+    const Array a{10, 7};
+
+    auto val = a[5];
+    auto val1 = a.operator[](5);
+
+    a[5] = 2;
+
+    Array a1{10, 3};
+    a1[5] = 44;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include "mint.hpp"
+
+using namespace std;
+
+
+class Array{
+public:
+    Array(size_t size, int val = 0);
+    ~Array();
+    Array(const Array &) = delete;
+    Array &operator=(const Array &) = delete;
+
+    int &operator[](size_t index);
+    const int &operator[](size_t index)const;
+
+    size_t size()const{return msize;}
+
+    friend std::ostream& operator<<(std::ostream &os, const Array &a);
+
+private:
+    size_t msize;
+    int *mpa;
+};
+
+
+Array::Array(size_t size, int val) : msize{size}, mpa{new int[msize]}
+{
+    for (size_t i = 0; i < msize; ++i) {
+        mpa[i] = val;
+    }
+}
+
+Array::~Array()
+{
+    delete []mpa;
+}
+
+int &Array::operator[](size_t index)
+{
+    return mpa[index];
+}
+
+const int &Array::operator[](size_t index) const
+{
+    return mpa[index];
+}
+
+std::ostream& operator<<(std::ostream &os, const Array &a)
+{
+    os << "[";
+    for (size_t i = 0; i < a.msize -1; ++i) {
+        os << a.mpa[i] << ", ";
+    }
+
+    os << a.mpa[a.msize -1] << "]";
+
+    return os;
+}
+
+
+int main()
+{
+    Array a{10};
+
+    //range for loop
+
+    //bunuda ögrenecez ileride gorecez
+    for(auto val : a){
+
+    }
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+
+class Mint{
+private:
+    int mval{};
+
+public:
+    Mint() = default;
+    explicit Mint(int val) : mval{val}
+    {
+        cout << "Mint ctor val = " << val << "  this = " << this << "\n";
+    }
+
+    ~Mint()
+    {
+        cout << "Mint dtor this = " << this << "\n";
+    }
+
+    int get()const
+    {
+        return mval;
+    }
+
+    void set(int x)
+    {
+        mval = x;
+    }
+
+
+    friend std::ostream &operator<<(std::ostream &os, const Mint val)
+    {
+        return os << "[" << val.mval << "]\n";
+    }
+    friend std::istream &operator>>(std::istream &is, Mint &m)
+    {
+        return is >> m.mval;
+    }
+};
+
+
+class MintPtr{
+public:
+    explicit MintPtr(Mint *pm) : mptr{pm}{}
+
+    MintPtr(const MintPtr &) = delete;
+    MintPtr &operator=(const MintPtr &) = delete;
+
+    ~MintPtr()
+    {
+        if(mptr)
+            delete mptr;
+    }
+
+    Mint &operator*()
+    {
+        return *mptr;
+    }
+
+    Mint *operator->()
+    {
+        return mptr;
+    }
+
+private:
+    Mint *mptr;
+};
+
+int main()
+{
+    cout << "main basladi\n";
+
+    {
+        MintPtr ptr{new Mint{5}};
+
+        cout << *ptr << "\n";
+
+        cout << ptr->get() << "\n";
+
+        ptr->set(66);
+        cout << ptr->get() << "\n";
+        //cout << ptr.operator->()->get() << "\n";
+    }
+    cout << "main sonlaniyor\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+
+class Mint{
+private:
+    int mval{};
+
+public:
+    Mint() = default;
+    explicit Mint(int val) : mval{val}
+    {
+        cout << "Mint ctor val = " << val << "  this = " << this << "\n";
+    }
+
+    ~Mint()
+    {
+        cout << "Mint dtor this = " << this << "\n";
+    }
+
+    int get()const
+    {
+        return mval;
+    }
+
+    void set(int x)
+    {
+        mval = x;
+    }
+
+
+    friend std::ostream &operator<<(std::ostream &os, const Mint val)
+    {
+        return os << "[" << val.mval << "]\n";
+    }
+    friend std::istream &operator>>(std::istream &is, Mint &m)
+    {
+        return is >> m.mval;
+    }
+};
+
+template <typename  T>
+class SmartPtr{
+public:
+    explicit SmartPtr(T *pm) : mptr{pm}{}
+
+    SmartPtr(const SmartPtr &) = delete;
+    SmartPtr &operator=(const SmartPtr &) = delete;
+
+    ~SmartPtr()
+    {
+        cout << "SmartPtr dtor\n";
+        if(mptr)
+            delete mptr;
+    }
+
+    T &operator*()
+    {
+        return *mptr;
+    }
+
+    T *operator->()
+    {
+        return mptr;
+    }
+
+private:
+    T *mptr;
+};
+
+int main()
+{
+    cout << "main basladi\n";
+
+    {
+        SmartPtr<Mint> ptr{new Mint{5}};
+        cout << *ptr << "\n";
+        cout << ptr->get() << "\n";
+        ptr->set(66);
+        cout << ptr->get() << "\n";
+        //cout << ptr.operator->()->get() << "\n";
+    }
+
+    {
+        SmartPtr<std::string> ptr{new string{"abdulmelik"}};
+        cout << *ptr << "\n";
+        ptr->size();
+    }
+
+    cout << "main sonlaniyor\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+endl
+
+
+#include <iostream>
+
+using namespace std;
+
+
+//mumkun oldugu kadar endl kullanmayalım
+//nesnenin flush fonksiyonunu cagırır
+//fazladan bir flush
+std::ostream & Endl(std::ostream &os)
+{
+    os << "\n";
+    os.flush(); //flush eder cıkıs akımını
+    return os;
+}
+
+
+int main()
+{
+    int ival = 123;
+    double dval = 2.4;
+
+    cout << ival << Endl << dval << Endl;
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyonn cagrı operatorunu overload
+
+class Functor{
+public:
+    int operator()(int val)const
+    {
+        cout << "int Functor::operator()(int val)\n";
+        cout << "val = " << val << " \n";
+        cout << "this = " << this << "\n";
+
+        return val * val;
+    }
+};
+
+int main()
+{
+    Functor f;
+
+    cout << "&f = " << &f << "\n";
+
+    auto val = f(10);
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyonn cagrı operatorunu overload
+
+class Functor{
+public:
+    int operator()(int val)const
+    {
+        cout << "int Functor::operator()(int val)\n";
+        cout << "val = " << val << " \n";
+        cout << "this = " << this << "\n";
+
+        return val * val;
+    }
+
+private:
+    static int a;
+};
+
+int main()
+{
+    Functor f;
+
+    cout << "sizeof : " << sizeof (f) << "\n";
+
+    cout << "&f = " << &f << "\n";
+
+    auto val = f(10);
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyonn cagrı operatorunu overload
+
+class Functor{
+public:
+    int operator()(int val = 12)const //varsayılan arguman alabilir
+    {
+        cout << "int Functor::operator()(int val)\n";
+        cout << "val = " << val << " \n";
+        cout << "this = " << this << "\n";
+
+        return val * val;
+    }
+
+private:
+    static int a;
+};
+
+int main()
+{
+    Functor f;
+
+    cout << "sizeof : " << sizeof (f) << "\n";
+
+    cout << "&f = " << &f << "\n";
+
+    auto val = f();
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyonn cagrı operatorunu overload
+
+class Functor{
+public:
+    int operator()(int size, int val = 12)const //varsayılan arguman alabilir
+    {
+        cout << "int Functor::operator()(int val)\n";
+        cout << "size = " << size << " \n";
+        cout << "val = " << val << " \n";
+        cout << "this = " << this << "\n";
+
+        return val * val;
+    }
+
+private:
+    static int a;
+};
+
+int main()
+{
+    Functor f;
+
+    cout << "sizeof : " << sizeof (f) << "\n";
+
+    cout << "&f = " << &f << "\n";
+
+    auto val = f(5, 15);
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyonn cagrı operatorunu overload
+
+class Functor{
+public:
+    int operator()(int size, int val = 12)const //varsayılan arguman alabilir
+    {
+        cout << "int Functor::operator()(int val)\n";
+        cout << "size = " << size << " \n";
+        cout << "val = " << val << " \n";
+        cout << "this = " << this << "\n";
+
+        return val * val;
+    }
+
+    int operator()(int x = 15)
+    {
+        return x + 5;
+    }
+
+private:
+    static int a;
+};
+
+int main()
+{
+    Functor f;
+
+    cout << "sizeof : " << sizeof (f) << "\n";
+
+    cout << "&f = " << &f << "\n";
+
+    auto val = f(5, 15);
+    auto val1 = f(5);
+
+    cout << "val = " << val << "\n";
+    cout << "val1 = " << val1 << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+//fonksiyonn cagrı operatorunu overload
+
+class Functor{
+public:
+    int operator()(int size, int val = 12)const //varsayılan arguman alabilir
+    {
+        cout << "int Functor::operator()(int val)\n";
+        cout << "size = " << size << " \n";
+        cout << "val = " << val << " \n";
+        cout << "this = " << this << "\n";
+
+        return val * val;
+    }
+
+    int operator()(int x = 15)
+    {
+        return x + 5;
+    }
+
+private:
+    static int a;
+};
+
+int main()
+{
+    Functor f;
+    auto val = f.operator()(5, 15);
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Random{
+public:
+    Random(int low, int high) : mlow{low}, mhigh{high}{}
+
+    int operator()()
+    {
+        ++cnt;
+        return rand() % (mhigh - mlow - 1) + mhigh;
+    }
+
+    int get_call_count()const{
+        return cnt;
+    }
+
+private:
+    int mlow, mhigh;
+    int cnt = 0;
+};
+
+int main()
+{
+
+    Random rand1{100, 500};
+
+    for (int i = 0; i < 10; ++i) {
+        cout << rand1() << " ";
+    }
+    cout << "\n";
+    cout << "\n";
+
+    Random rand2{0, 100};
+
+    for (int i = 0; i < 22; ++i) {
+        cout << rand2() << " ";
+    }
+
+    cout << "\n";
+    cout << "\n";
+
+    cout << "rand1 call count : " << rand1.get_call_count() << "\n";
+    cout << "rand2 call count : " << rand2.get_call_count() << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Random{
+public:
+    Random(int low, int high) : mlow{low}, mhigh{high}{}
+
+    int operator()()
+    {
+        ++cnt;
+        return rand() % (mhigh - mlow - 1) + mhigh;
+    }
+
+    int get_call_count()const{
+        return cnt;
+    }
+
+private:
+    int mlow, mhigh;
+    int cnt = 0;
+};
+
+void foo(Random x)
+{
+    cout << "foo cagrildi\n";
+    int val = x();
+
+    cout << " x = " << val << "\n";
+}
+
+int main()
+{
+
+    foo(Random{10, 55});
+}
+
+/***************************************************/
+/***************************************************/
+
+Tur donusturme operator fonksiyonların overload edilmesi
+
+
+
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Myclass{
+public:
+};
+
+
+
+int main()
+{
+
+    Myclass m;
+
+    int val{};
+    ival = m;  //otomatik tur donusturme yok
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int val) : mval{val}{}
+    operator int()const; //int turuen dousnum yapılması icin
+    operator double()const; //double turune donusum yapılması icin
+
+private:
+    int mval;
+};
+
+
+
+int main()
+{
+
+    Myclass m;
+
+    int val{};
+
+    val = m; //otomatik tur donusturme
+    val = m.operator int();  //otomatik tur donusturme
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int val) : mval{val}{}
+    operator int()const
+    {
+        return mval;
+    }
+
+private:
+    int mval;
+};
+
+
+
+int main()
+{
+
+    Myclass m{15};
+
+    int val{};
+
+    val = m; //otomatik tur donusturme
+    val = m.operator int();  //otomatik tur donusturme
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int val) : mval{val}{}
+    operator int()const
+    {
+        return mval;
+    }
+
+private:
+    int mval;
+};
+
+
+
+int main()
+{
+
+    Myclass m{15};
+
+    double val{};
+
+    val = m; //basımız belada
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+//C++11 ile  otomatik tur donusumlerini engellemek icin explicit keyword kullanıma girdi
+
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int val) : mval{val}{}
+    explicit operator int()const
+    {
+        return mval;
+    }
+
+private:
+    int mval;
+};
+
+
+
+int main()
+{
+
+    Myclass m{15};
+
+    double val{};
+
+    val = m; //basımız beladan kurtuldu explicit
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+//C++11 ile  otomatik tur donusumlerini engellemek icin explicit keyword kullanıma girdi
+
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int val) : mval{val}{}
+    explicit operator int()const
+    {
+        return mval;
+    }
+
+private:
+    int mval;
+};
+
+int main()
+{
+
+    Myclass m{15};
+
+    double val{};
+
+    //val = m; //basımız beladan kurtuldu explicit
+
+    val = static_cast<int>(m); //artık istege baglı gecerli durum
+
+    cout << "val = " << val << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+//const T * ---> T* donusum yok
+//T* ---> const T* donuusum vardır
+
+int main()
+{
+    string str = "abdulmelik"; //const char * string dousum var
+
+    const char *p = str;  //string turunden const  char * trune donusum yok
+
+    //boyle problemı cozebiliriz
+    const char *p1 = str.c_str();
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
