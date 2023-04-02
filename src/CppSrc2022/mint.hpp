@@ -66,6 +66,11 @@ public:
         return *this;
     }
 
+    explicit operator bool()const
+    {
+        return mval != 0;
+    }
+
     friend bool operator==(const Mint &m1, const Mint &m2)
     {
         return m1.mval == m2.mval;
