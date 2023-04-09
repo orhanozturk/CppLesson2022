@@ -16824,14 +16824,1287 @@ int main()
 /***************************************************/
 /***************************************************/
 
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+private:
+    class Nested
+    {
+
+    };
+public:
+    static Nested foo();
+
+};
+
+int main()
+{
+    Encloser::Nested ns = Encloser::foo(); //sentaks hatası
+
+}
+
+/***************************************************/
+/***************************************************/
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+private:
+    class Nested
+    {
+    public:
+        void mf();
+    };
+public:
+    static Nested foo();
+
+};
+
+int main()
+{
+    //client kod prıvate erişemez
+    //Encloser::Nested ns = Encloser::foo(); //sentaks hatası
+
+    //tuhaf bir şekilde bunu geçerli olarak kabul etmişler
+    auto x = Encloser::foo();
+    x.mf();
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+private:
+    class Nested
+    {
+    };
+
+    Encloser::Nested x; //tanımlayabılırız
+};
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+private:
+    class Nested
+    {
+    };
+
+    void func();
+};
+
+void Encloser::func()
+{
+    Nested x;
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+private:
+    class Nested
+    {
+    public:
+        void func(Nested x);
+    };
+
+
+};
+
+//cpp da bu sekilde tanımlarız
+void Encloser::Nested::func(Nested x)
+{
+
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+public:
+    class Nested
+    {
+    public:
+        void func(Nested x);
+        Nested foo();
+    };
+
+
+};
+
+//cpp da bu sekilde tanımlarız
+void Encloser::Nested::func(Nested x)
+{
+    Nested y;
+}
+
+Encloser::Nested Encloser::Nested::foo()
+{
+
+}
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+public:
+    class Nested
+    {
+    public:
+        Nested(const Nested &); //copt ctor tanımı
+    };
+
+
+};
+
+Encloser::Nested::Nested(const Nested &)
+{
+
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+class Encloser{
+public:
+    class Nested
+    {
+    public:
+        int func(int x)
+        {
+            //
+            //
+            //
+            return x;
+        }
+
+        int foo(int x);
+        int f(int);
+    };
+
+    //gecerli değil
+    int Nested::f(int x)
+    {
+        return x;
+    }
+};
+
+int Encloser::Nested::foo(int x)
+{
+
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+
+int main()
+{
+    //std kutuphane nested type örnek
+   vector<int>::iterator;
+   vector<int>::difference_type;
+   vector<int>::const_iterator;
+   vector<int>::size_type;
+   vector<int>::pointer;
+   vector<int>::reference;
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+//iterator sınıfı nested type
+//temel bir arayüz tasımını biz yapalım
+
+class Myclass{};
+
+class Vector{
+public:
+    class iterator{
+    public:
+        Myclass &operator *();
+        Myclass &operator ->();
+    };
+
+    iterator begin();
+    iterator end();
+};
+
+int main()
+{
+    Vector myvec;
+
+   Vector::iterator iterBegin = myvec.begin();
+   Vector::iterator iterEnd   = myvec.end();
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//içsel türe sahip olan sınıf -- Enclosing type
+
+//iterator sınıfı nested type
+//temel bir arayüz tasımını biz yapalım
+
+class Myclass{
+public:
+    void func();
+};
+
+
+int main()
+{
+    vector<Myclass> myvec;
+
+    vector<Myclass>::iterator iterBegin = myvec.begin();
+
+    auto iterB = myvec.begin();
+}
+
+/***************************************************/
+/***************************************************/
+
+eski pimpl idomuna ornek
+
+pipmle farklı isimleri  veya aynı anlamda kullanılan kelşmeler
+
+handle body
+cashire cat
+pipml
+opaque pointer
+
+
+veri gizleme için kullanılmaktadır
 
 
 
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+
+using namespace std;
+
+//hpp
+class Myclass{
+public:
+    Myclass();
+    ~Myclass();
+
+    void func();
+
+private:
+    struct Pimpl; //pointer implementation
+    Pimpl *ptr; //sadece opac pointer gorecez
+};
+
+//cpp
+struct Myclass::Pimpl{
+    int a;
+    double b;
+    void fuu();
+};
+
+
+Myclass::Myclass() : ptr{new Pimpl}
+{
+
+}
+
+Myclass::~Myclass()
+{
+    delete ptr;
+}
+
+void Myclass::func()
+{
+    ptr->a;
+    ptr->b;
+    ptr->fuu();
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+#include <memory>
+
+using namespace std;
+
+//smart pointer şeklinde
+//hpp
+class Myclass{
+public:
+    Myclass();
+    ~Myclass();
+
+    void func();
+
+private:
+    struct Pimpl; //pointer implementation
+    unique_ptr<Pimpl> uptr; //sadece opac pointer gorecez
+};
+
+//cpp
+struct Myclass::Pimpl{
+    int a;
+    double b;
+    void fuu();
+};
+
+
+Myclass::Myclass() : uptr{new Pimpl}
+{
+
+}
+
+void Myclass::func()
+{
+    uptr->a;
+    uptr->b;
+    uptr->fuu();
+}
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+# Date sınıfı
+
+Aşağıda ismi `Date` olan bir sınıfın tanımlandığı başlık dosyası yer almaktadır.
+Bu ödevde `Date` sınıfının kodlarını yazmanız isteniyor.
+`Date` sınıfı türünden bir nesnenin değeri bir tarihtir. Örnek: `15 Şubat 1998` <br>
+Aşağıdaki açıklamalar kodda bulunan yorum satırlarına ilişkindir:
+
+1. Sınıfın hizmet verdiği en küçük yıl değeri
+2. `random_date` işlevinin üreteceği tarih için en küçük yıl değeri
+3. `random_date` işlevinin üreteceği tarih için en büyük yıl değeri
+4.  Haftanın günü için `enum class` türü
+5. Varsayılan kurucu işlev: `Date` nesnesini `01-01-1900` tarihi ile oluşturacak
+6. `Date` nesnesini gün, ay, yıl değeri ile oluşturacak kurucu işlev
+7. `Date` nesnesini formatlanmış  yazıdan alacağı tarih değeri ile oluşturacak. Format: `gg/aa/yil`
+8. `Date` nesnesini `"calender time"` değerinden dönüştüreceği tarih değeri ile oluşturacak.
+9. Ayın gününü döndürüyor.
+10. Ay değerini döndürüyor. `(Ocak 1, Şubat 2, ...)`
+11. Tarihin yıl değerini döndürüyor
+12. Yılın gününü döndürüyor `(01 Ocak ---> 1   31 Aralık---> 365 ya da 366`
+13. Haftanın gününü döndürüyor.
+14. Tarihin ayın günü değerini değiştiriyor.
+15. Tarihin ayını değiştiriyor
+16. Tarihin yılını değiştiriyor.
+17. Tarihi değiştiriyor.
+18. Tarihten gün çıkartan `const` üye operatör işlevi. Geri dönüş değeri elde edilen tarih olacak.
+19. Tarihi gelen gün kadar arttıran üye operatör işlevi. Geri dönüş değeri `*this` olmalı.
+20. Tarihi gelen gün kadar eksilten üye operatör işlevi. Geri dönüş değeri `*this` olmalı.
+21. Önek `++` operatörünü yükleyen işlev. (İşlevin referans döndürdüğüne dikkat ediniz).
+22. Sonek `++` operatörünü yükleyen işlev. (İşlevin referans döndürmediğine dikkat ediniz).
+23. Önek `--` operatörünü yükleyen işlev. (İşlevin referans döndürdüğüne dikkat ediniz).
+24. Sonek `--` operatörünü yükleyen işlev. (İşlevin referans döndürmediğine dikkat ediniz).
+25. Rastgele bir tarih döndüren sınıfın `static` üye işlevi.
+26. Artık yıl testi yapan sınıfın `static` üye işlevi.
+27. `Date` nesnelerinin karşılaştırılmasını sağlayacak global operatör işlevleri
+28. İki tarih arasındaki gün farkını döndüren global operatör işlevi
+29. Gelen tarihten `n` gün sonrasını döndüren global operatör işlevleri
+30. İçsel `(nested) enum class Weekday` için arttırma ve eksiltme işlevleri
+31. Date nesnelerinin değerlerini çıkış akımlarına yazdıracak global operatör işlevi `(inserter)`
+Formatlama şöyle olmalı:  `31 Ekim 2019 Persembe`
+32. `Date` nesnelerine giriş akımlarından aldığı karakterlerden oluşturulacak değeri yerleştiren global operatör işlevi `(extractor)`
+Formatlama: `gg/aa/yyyy` (ayıraç olarak istenilen bir karakter kullanılabilir.
+
+### Diğer notlar:
+* Dilediğiniz global işlevleri `"friend"` yapabilirsiniz.
+* Sınıfın `private` arayüzünü dilediğiniz gibi oluşturabilirsiniz.
+* Gerekli görürseniz sınıfın `public` arayüzüne eklemeler yapabilirsiniz.
+* Gerekli görürseniz sınıfın `public` arayüzünde değişiklikler yapabilirsiniz.
+* Sınıfın `public` öğelerinin isimlerini istediğiniz şekilde değiştirebilirsiniz.
+* Dilediğiniz işlevleri `"constexpr"` yapabilirsiniz.
+* Bu ödevde `"exception handling"` araçlarını kullanmayacağız. (`exception handling` konusunu gördükten sonra kodlarda değişiklik yapacağız.)
+* Kod tekrarından mümkün olduğu kadar kaçınmalısınız.
+* `const` doğruluğuna `(const correctness)` çok dikkat etmelisiniz. `(const olması gereken tüm varlıklar const olmalı)`
+* Gereksiz yorum satırlarından mümkün olduğu kadar kaçınmalısınız.
+* Yazdığınız kodların doğru çalışıp çalışmadığını sınamak için test kodları yazmalısınız.
+* Derleyicinizin uygun bir `switch`'ini kullanarak mantıksal uyarı iletilerinin hata `(error)` olarak değerlendirilmesini sağlayınız.
+
+
+```
+#ifndef DATE_H
+#define DATE_H
+#include <iosfwd>
+#include <ctime>
+
+class Date {
+public:
+        static constexpr int year_base = 1900;  //1
+        static constexpr int random_min_year = 1940;  //2
+        static constexpr int random_max_year = 2023;  //3
+        enum class Weekday {Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}; //4
+        Date(); //5
+        Date(int d, int m, int y);  //6
+        Date(const char *p);  //7
+        Date(std::time_t timer); //8
+        int get_month_day()const; //9
+        int get_month()const; //10
+        int get_year()const; //11
+        int get_year_day()const; //12
+        Weekday get_week_day()const; //13
+
+        Date& set_month_day(int day); //14
+        Date& set_month(int month); //15
+        Date& set_year(int year); //16
+        Date& set(int day, int mon, int year); //17
+
+        Date operator-(int day)const; //18
+        Date& operator+=(int day); //19
+        Date& operator-=(int day); //20
+        Date& operator++(); //21
+        Date operator++(int); //22
+        Date& operator--(); //23
+        Date operator--(int); //24
+
+        friend bool operator<(const Date &, const Date &); //27
+        friend bool operator==(const Date &, const Date &); //27
+        static Date random_date(); //25
+        static constexpr bool isleap(int y); //26
+
+        friend std::ostream &operator<<(std::ostream &os, const Date &date); //31
+        friend std::istream &operator>>(std::istream &is, Date &date); //32
+};
+
+bool operator<(const Date &, const Date &); //27
+bool operator<=(const Date &, const Date &); //27
+bool operator>(const Date &, const Date &); //27
+bool operator>=(const Date &, const Date &); //27
+bool operator==(const Date &, const Date &); //27
+bool operator!=(const Date &, const Date &); //27
+
+int operator-(const Date &d1, const Date &d2); //28
+Date operator+(const Date &date, int n); //29
+Date operator+(int n, const Date &); //29
+Date::Weekday& operator++(Date::Weekday &r); //30
+Date::Weekday operator++(Date::Weekday &r, int); //30
+Date::Weekday& operator--(Date::Weekday &r); //30
+Date::Weekday operator--(Date::Weekday &r, int); //30}
+
+#endif
+```
 
 
 
+#include <iostream>
+#include "mint.hpp"
+#include <vector>
+#include <memory>
+#include "date.hpp"
+
+using namespace std;
 
 
+
+int main()
+{
+    Date mydate; //1.1.1900
+    Date t1 = {12, 5, 1935};
+    Date t2 = {"05.07.1992"};
+
+    Date t3{16000000};
+
+    t2.set_month_day(12);
+    cout << mydate.get_month();
+
+    cout << t1 + 100 << "\n";
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+delegating consructor
+
+bir consructor ın başka bir ctor'ı çağırması
+
+#include <iostream>
+
+
+using namespace std;
+
+class Orhn{
+public:
+    Orhn();
+    Orhn(int);
+    Orhn(int, int, int);
+    Orhn(const char *p);
+
+private:
+    void init(); //ortak bir kod oldugunda init cagaracaklar
+
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+class Orhn{
+public:
+    Orhn() : Orhn(0, 0, 0)
+    {
+
+    }
+    Orhn(int x) : Orhn{x,x,x}
+    {
+
+    }
+    Orhn(int a, int b, int c): mx{a}, my{b}, mz{c}
+    {
+
+    }
+
+    Orhn(const char *p) : Orhn(std::atoi(p), std::atoi(p+2), std::atoi(p+4))
+    {
+
+    }
+
+private:
+    int mx, my, mz;
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+class Orhn{
+public:
+    Orhn(int, int); //delege edilen
+
+    Orhn(int x) : Orhn(x, x)
+    {
+
+    }
+
+private:
+    int mx, my, mz;
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+
+
+using namespace std;
+
+class Orhn{
+public:
+    Orhn() : Orhn(0, 0){}
+    Orhn(int, int);
+    Orhn(int, int, int);
+    Orhn(int, int, int, int);
+
+    //recersive olmayacak şekilde birbirne delegate edebiliriz
+    //bundan programcı soumludur
+private:
+    int mx, my, mz;
+};
+
+int main()
+{
+
+
+}
+
+/***************************************************/
+/***************************************************/
+
+
+user defined literals(V1)
+
+operator overloading özel bir biçimi
+son ekleri kullanarak sınıf türünden degerler olusturmak
+
+
+12u --> unsigned int türünden sabit ise
+12k ---> bunuda programcı tarafından ele alınması
+
+
+bu araç C++14 ile dile eklendi
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+    string str{"mehmet"};
+
+    auto s = "abdulmelik"s; //user define literal
+    //const cahr * dı şimdi string
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+#include <chrono>
+
+using namespace std;
+using namespace chrono;
+
+int main()
+{
+    auto sec = 24s;
+    auto min = 25min;
+    auto ns = 45343ns;
+}
+
+/***************************************************/
+/***************************************************/
+
+standart kutuphanesindekiler ile cakıstırmamalıyız
+fonksiyon parametresi farklı olamaz
+geri dönüş türü herhangi olabilir
+
+tam sayılar için unsigned long long int
+gerçek sayılar için long  double
+const char *  seçilebilir
+
+
+
+#include <iostream>
+#include <string>
+#include <chrono>
+
+using namespace std;
+
+double operator""_km(long double val)
+{
+    cout << "user defined literal op function\n";
+
+    return static_cast<double>(val) * 1000;
+}
+
+int main()
+{
+    auto distance = 2.5_km;
+
+    cout << "distance : " << distance << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+
+#include <iostream>
+#include <string>
+#include <chrono>
+
+using namespace std;
+
+constexpr double operator""_km(long double val)
+{
+    return static_cast<double>(val) * 1000;
+}
+
+constexpr double operator""_m(long double val)
+{
+    return static_cast<double>(val);
+}
+
+
+constexpr double operator""_cm(long double val)
+{
+    return static_cast<double>(val) / 100.;
+}
+
+
+constexpr double operator""_mm(long double val)
+{
+    return static_cast<double>(val) / 1000.;
+}
+
+
+
+int main()
+{
+    constexpr auto distance = 2.5_km + 12.6_m + 1234._cm + 565645._mm;
+
+    cout << "distance : " << distance << "\n";
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+#include <chrono>
+
+using namespace std;
+
+constexpr unsigned long long int operator""_KB(unsigned long long int kbytes)
+{
+    return 1024 * kbytes;
+}
+
+int main()
+{
+    constexpr auto term = 16_KB;
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <array>
+
+using namespace std;
+
+namespace  ORHN{
+    constexpr size_t operator""_KB(unsigned long long int kbytes)
+    {
+        return static_cast<size_t>(1024 * kbytes);
+    }
+
+    constexpr size_t operator""_MB(unsigned long long int kbytes)
+    {
+        return static_cast<size_t>(1024 * 1024 * kbytes);
+    }
+}
+
+int main()
+{
+    using namespace ORHN;
+    auto size {4_KB};
+
+    using byte = unsigned char;
+    auto buf1 = std::array<byte, 16_KB>{};
+    auto buf2 = std::array<byte, 1_MB>{};
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <array>
+#include "date.hpp"
+
+using namespace std;
+
+Date operator""_d(const char *p, size_t size)
+{
+    auto day = std::atoi(p);
+    auto mon = std::atoi(p + 2);
+    auto year = std::atoi(p + 4);
+
+    return Date{day,mon, year};
+}
+
+
+int main()
+{
+    auto date = "03.06.1992"_d;
+}
+
+/***************************************************/
+/***************************************************/
+
+std string sınıfı
+
+cstring  ---> sonunda  "\0"  karateri tutan bir yazı
+
+"orhan" artık c deki gibi char * dizi değil const char * dizisidir
+
+stl 2inde std kutuphanesi bir container
+
+<string> baslık dosyasını
+<cstring> --> bununla karıstırmayın -- bu C nin C++ daki hali
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+    //aslında string sınıfı bu alttıkı tanımın eş ismidir
+    basic_string<char, char_traits<char>>;
+
+    //birinci arguman türü belirler
+    //ikinci template parametre ise yazı işlemlerini nasıl yapıldıgını bildiren bir yapı
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+    //aslında string sınıfı bu alttıkı tanımın eş ismidir
+   // basic_string<char, char_traits<char>>;
+
+    cout << typeid (string).name() << "\n";
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+   cout << "sizeof(string) = " << sizeof (string) << "\n";
+   cout << "sizeof(char *) = " << sizeof (char *) << "\n";
+
+   //neden 32 byte
+   //small string optimization var
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+//standart algoritma sınıfları
+/*
+#include <algorithm>
+#include <numeric>
+*/
+
+using namespace std;
+
+//peki string sınıfı bu algoritmalar aneden ihtiyac duyuyor cunku string sının bir konteynerdır
+
+
+int main()
+{
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+    //tur eş ismidir
+    //generik programlamada bu tur kulanılır
+    string::size_type
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+   string str; //default ctor
+   string str1{"Orhan ozturk gunaydin"};
+
+   cout << "size : " << str1.size() << "\n";
+   cout << "length : " << str1.length() << "\n";
+   //size lenght aynı anlamdadır amaçlarıda aynıdır
+   //size contaynerların ortak arayüzü oldugu için
+
+   cout << "capacity : " << str1.capacity() << "\n"; //dinamik bellek boyutunu gözterir
+
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    string str("abdulmelik");
+    string str1{"orhan"}; //eski C++ da bu gecerli değildi
+    string str2 = "mehmet";
+
+    display_string(str);
+    display_string(str1);
+    display_string(str2);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    //bunların hepsi aynı kaynagımı kullanır
+    //hayır hepsi farklı kaynak kullanır ilişkileriyoktur
+    string str1("abdulmelik");
+    string str2{str1};
+    string str3{str1};
+    string str4 = str1;
+
+    display_string(str2);
+    display_string(str3);
+    display_string(str4);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    string str1{"abdulmelik"};
+    string str2(move(str1)); //move ctor
+
+    display_string(str1); //str1 kullanırken dikkatli ol için deki veri taşındı
+    display_string(str2);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    char str[] = "0123456789";
+
+    string s1{str, 4};//4 uzunlugunda 0123
+    string s2{str + 3, 3}; //345  yazısı
+    string s3{str, 40}; //bu tanımsız davranıs cunku yazı tasması olacak
+
+    display_string(s1);
+    display_string(s2);
+    display_string(s3);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    string s1{"orhan ozturk"};
+    string s2(s1, 2, 3); //2 indexten 3 karakter al
+    string s3(s1, 0, 5); //orhan yazısını al
+
+    display_string(s1);
+    display_string(s2);
+    display_string(s3);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    string s1{"orhan ozturk"};
+    string s2(s1, 2); //bu indexten basla geri kalanı al
+    string s3(s1, 0);
+
+    display_string(s1);
+    display_string(s2);
+    display_string(s3);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    string s1{"orhan ozturk"};
+    string s2(s1, 2, 1000); //gecerli durum geriye kalan butun karateri alır
+
+    display_string(s1);
+    display_string(s2);
+}
+
+/***************************************************/
+/***************************************************/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
+
+int main()
+{
+    //fill ctor
+    string s1(80, 'A');
+    display_string(s1);
+
+    string s2{80, 'A'};
+    display_string(s2);
+}
+
+/***************************************************/
+/***************************************************/
+
+default ctor
+copy ctor -- const string &
+move ctor --> string &&
+const string &s, size_type idx
+const string &s, size_type idx, size_type n
+cstring(const char *)
+data(const char *, size_type)
+fill(size_t, char c)
+init_list
+range constructor
 
 
 

@@ -1,31 +1,21 @@
 #include <iostream>
-#include "mint.hpp"
-#include <vector>
+#include <string>
 
 using namespace std;
 
-//içsel türe sahip olan sınıf -- Enclosing type
-
-
-class Encloser{
-private:
-    static void sfunc();
-
-    class Nested
-    {
-        void foo()
-        {
-            sfunc();
-            //modern c++ gecerli
-            //eski c++ da gecerli degil
-        }
-    };
-};
+void display_string(const string &s)
+{
+    cout << "[ " << s.length() << " ] : (" << s << ")\n";
+}
 
 int main()
 {
+    //fill ctor
+    string s1(80, 'A');
+    display_string(s1);
 
-
+    string s2{80, 'A'};
+    display_string(s2);
 }
 
 /***************************************************/
